@@ -253,7 +253,7 @@
       resize: vertical;
     }
 
-    .video-card {
+    .video-card, .photo-card {
       background: white;
       border-radius: 12px;
       overflow: hidden;
@@ -261,7 +261,7 @@
       transition: all 0.3s ease;
     }
 
-    .video-card:hover {
+    .video-card:hover, .photo-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
@@ -274,6 +274,13 @@
       align-items: center;
       justify-content: center;
       position: relative;
+    }
+
+    .photo-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      cursor: pointer;
     }
 
     .modal {
@@ -378,7 +385,7 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
-    .delete-video-btn {
+    .delete-btn {
       background: #EF4444;
       color: white;
       padding: 8px 16px;
@@ -389,7 +396,7 @@
       transition: all 0.3s ease;
     }
 
-    .delete-video-btn:hover {
+    .delete-btn:hover {
       background: #DC2626;
     }
 
@@ -398,6 +405,79 @@
       height: auto;
       border-radius: 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .image-preview {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-wrapper input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 12px 16px;
+      background: var(--light-ash);
+      border: 2px dashed var(--accent-blue);
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-label:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    .photo-modal-content {
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .photo-modal-content img {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+    }
+
+    .tab-button {
+      padding: 12px 24px;
+      background: white;
+      border: 2px solid var(--light-ash);
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      color: var(--dark-ash);
+    }
+
+    .tab-button.active {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+    }
+
+    .tab-button:hover:not(.active) {
+      background: var(--light-ash);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
@@ -415,12 +495,12 @@
         <p class="text-sm opacity-90">Akure, Nigeria</p>
        </div>
       </div>
-      <div class="desktop-nav hidden lg:flex space-x-2"><a class="nav-link active" data-page="home">Home</a> <a class="nav-link" data-page="about">About</a> <a class="nav-link" data-page="services">Services</a> <a class="nav-link" data-page="giving">Giving</a> <a class="nav-link" data-page="media">Media</a> <a class="nav-link" data-page="prayer">Prayer</a> <a class="nav-link" data-page="contact">Contact</a>
+      <div class="desktop-nav hidden lg:flex space-x-2"><a class="nav-link active" data-page="home">Home</a> <a class="nav-link" data-page="about">About</a> <a class="nav-link" data-page="services">Services</a> <a class="nav-link" data-page="giving">Giving</a> <a class="nav-link" data-page="gallery">Gallery</a> <a class="nav-link" data-page="prayer">Prayer</a> <a class="nav-link" data-page="contact">Contact</a>
       </div><button id="mobile-menu-btn" class="lg:hidden text-white">
        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
        </svg></button>
      </div>
-     <div id="mobile-nav" class="mobile-nav mt-4 space-y-2 hidden"><a class="nav-link block active" data-page="home">Home</a> <a class="nav-link block" data-page="about">About</a> <a class="nav-link block" data-page="services">Services</a> <a class="nav-link block" data-page="giving">Giving</a> <a class="nav-link block" data-page="media">Media</a> <a class="nav-link block" data-page="prayer">Prayer</a> <a class="nav-link block" data-page="contact">Contact</a>
+     <div id="mobile-nav" class="mobile-nav mt-4 space-y-2 hidden"><a class="nav-link block active" data-page="home">Home</a> <a class="nav-link block" data-page="about">About</a> <a class="nav-link block" data-page="services">Services</a> <a class="nav-link block" data-page="giving">Giving</a> <a class="nav-link block" data-page="gallery">Gallery</a> <a class="nav-link block" data-page="prayer">Prayer</a> <a class="nav-link block" data-page="contact">Contact</a>
      </div>
     </nav>
    </header>
@@ -434,11 +514,11 @@
         <h2 id="welcome-title" class="text-5xl md:text-6xl font-bold mb-6" style="color: white;">Welcome to Vibrant Impact Ministries</h2>
         <p id="welcome-message" class="text-xl md:text-2xl mb-4 max-w-3xl mx-auto">Experience the transforming power of God through prophetic teaching, healing, and deliverance.</p>
         <p id="church-slogan" class="text-lg md:text-xl mb-8 italic opacity-90">"Raising Vibrant Believers for Kingdom Impact"</p>
-        <div class="flex flex-wrap justify-center gap-4 mb-12"><a class="btn-primary nav-trigger" data-page="services">📅 Service Days</a> <a class="btn-primary nav-trigger" data-page="giving">💝 Give Online</a> <a class="btn-secondary nav-trigger" data-page="media">���� Watch Live</a>
+        <div class="flex flex-wrap justify-center gap-4 mb-12"><a class="btn-primary nav-trigger" data-page="services">📅 Service Days</a> <a class="btn-primary nav-trigger" data-page="giving">💝 Give Online</a> <a class="btn-secondary nav-trigger" data-page="gallery">📸 View Gallery</a>
         </div><!-- Bible Verse -->
         <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-6 max-w-2xl mx-auto border-2" style="border-color: var(--accent-blue);">
          <p class="text-xl italic mb-2">"Not by might, nor by power, but by my Spirit, saith the Lord"</p>
-         <p class="font-semibold" style="color: var(--accent-blue);">— Zechariah 4:6</p>
+         <p class="font-semibold mt-2" style="color: var(--accent-blue);">— Zechariah 4:6</p>
         </div>
        </div>
       </div>
@@ -862,46 +942,76 @@
        <p class="text-gray-600">May the Lord bless you abundantly as you give cheerfully to His work.</p>
       </div>
      </div>
-    </section><!-- MEDIA PAGE -->
-    <section id="media-page" class="page-section py-20" style="width: 100%; background: white;">
+    </section><!-- GALLERY PAGE (Videos & Photos) -->
+    <section id="gallery-page" class="page-section py-20" style="width: 100%; background: white;">
      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h1 class="section-title text-5xl font-bold text-center mb-8" style="color: var(--primary-green);">Media Gallery</h1>
-      <p class="text-center text-lg text-gray-600 mb-12">Watch our services, testimonies, and inspiring content. Add your own videos to share with the community!</p><!-- Add Video Button -->
-      <div class="text-center mb-12"><button id="add-video-btn" class="btn-primary text-lg"> ➕ Add New Video </button>
-      </div><!-- Video Categories -->
-      <div id="video-container"><!-- Recent Sermons -->
-       <div class="mb-16">
-        <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">📖 Recent Sermons</h2>
-        <div id="sermons-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Videos will be dynamically loaded here -->
+      <p class="text-center text-lg text-gray-600 mb-12">Watch our services and browse through our photo memories!</p><!-- Tabs -->
+      <div class="flex justify-center gap-4 mb-12"><button id="tab-videos" class="tab-button active" onclick="switchTab('videos')"> 🎥 Videos </button> <button id="tab-photos" class="tab-button" onclick="switchTab('photos')"> 📸 Photos </button>
+      </div><!-- Videos Tab Content -->
+      <div id="videos-content" class="tab-content">
+       <div class="text-center mb-8"><button id="add-video-btn" class="btn-primary text-lg"> ➕ Add Video Link </button>
+       </div><!-- Video Categories -->
+       <div id="video-container"><!-- Recent Sermons -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">📖 Recent Sermons</h2>
+         <div id="sermons-grid" class="gallery-grid"><!-- Videos will be dynamically loaded here -->
+         </div>
+        </div><!-- Fire Night Highlights -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">🔥 Fire Night Highlights</h2>
+         <div id="firenight-grid" class="gallery-grid"><!-- Videos will be dynamically loaded here -->
+         </div>
+        </div><!-- Youth Fellowship -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">👥 Youth Fellowship</h2>
+         <div id="youth-grid" class="gallery-grid"><!-- Videos will be dynamically loaded here -->
+         </div>
+        </div><!-- Testimonies -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">✨ Testimonies &amp; Miracles</h2>
+         <div id="testimonies-grid" class="gallery-grid"><!-- Videos will be dynamically loaded here -->
+         </div>
         </div>
-       </div><!-- Fire Night Highlights -->
-       <div class="mb-16">
-        <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">🔥 Fire Night Highlights</h2>
-        <div id="firenight-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Videos will be dynamically loaded here -->
-        </div>
-       </div><!-- Youth Fellowship -->
-       <div class="mb-16">
-        <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">👥 Youth Fellowship</h2>
-        <div id="youth-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Videos will be dynamically loaded here -->
-        </div>
-       </div><!-- Testimonies -->
-       <div class="mb-16">
-        <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">✨ Testimonies &amp; Miracles</h2>
-        <div id="testimonies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"><!-- Videos will be dynamically loaded here -->
+       </div><!-- Social Media Links -->
+       <div class="bg-white rounded-xl shadow-lg p-8 mt-12 border-2" style="border-color: var(--light-ash);">
+        <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--primary-green);">Connect With Us</h2>
+        <div class="flex flex-wrap justify-center gap-6"><a href="https://www.youtube.com/@prophetvalentineifedayo3362/videos" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+          <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #FF0000;" viewbox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+          </svg><span class="font-bold text-gray-800">YouTube</span> </a> <a href="https://www.facebook.com/Valentineifedayoministries" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+          <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #1877F2;" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg><span class="font-bold text-gray-800">Facebook</span> </a> <a href="https://tiktok.com/@prophet_valentineifedayo" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+          <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #000000;" viewbox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+          </svg><span class="font-bold text-gray-800">TikTok</span> </a> <a href="https://twitch.tv/vibrantimpactministries" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+          <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #9146FF;" viewbox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
+          </svg><span class="font-bold text-gray-800">Twitch</span> </a>
         </div>
        </div>
-      </div><!-- Social Media Links -->
-      <div class="bg-white rounded-xl shadow-lg p-8 mt-12 border-2" style="border-color: var(--light-ash);">
-       <h2 class="text-3xl font-bold text-center mb-8" style="color: var(--primary-green);">Connect With Us</h2>
-       <div class="flex flex-wrap justify-center gap-6"><a href="https://www.youtube.com/@prophetvalentineifedayo3362/videos" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
-         <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #FF0000;" viewbox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-         </svg><span class="font-bold text-gray-800">YouTube</span> </a> <a href="https://www.facebook.com/Valentineifedayoministries" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-         <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #1877F2;" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-         </svg><span class="font-bold text-gray-800">Facebook</span> </a> <a href="https://tiktok.com/@prophet_valentineifedayo" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-         <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #000000;" viewbox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
-         </svg><span class="font-bold text-gray-800">TikTok</span> </a> <a href="https://twitch.tv/vibrantimpactministries" target="_blank" rel="noopener noreferrer" class="social-icon flex flex-col items-center p-6 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-         <svg class="w-16 h-16 mb-3" fill="currentColor" style="color: #9146FF;" viewbox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z" />
-         </svg><span class="font-bold text-gray-800">Twitch</span> </a>
+      </div><!-- Photos Tab Content -->
+      <div id="photos-content" class="tab-content" style="display: none;">
+       <div class="text-center mb-8"><button id="add-photo-btn" class="btn-primary text-lg"> ➕ Upload Photos </button>
+       </div><!-- Photo Categories -->
+       <div id="photo-container"><!-- Sunday Service Photos -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">☀️ Sunday Service</h2>
+         <div id="sunday-photos-grid" class="gallery-grid"><!-- Photos will be dynamically loaded here -->
+         </div>
+        </div><!-- Fire Night Photos -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">🔥 Fire Night</h2>
+         <div id="firenight-photos-grid" class="gallery-grid"><!-- Photos will be dynamically loaded here -->
+         </div>
+        </div><!-- Youth Fellowship Photos -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">👥 Youth Fellowship</h2>
+         <div id="youth-photos-grid" class="gallery-grid"><!-- Photos will be dynamically loaded here -->
+         </div>
+        </div><!-- Events & Special Occasions -->
+        <div class="mb-16">
+         <h2 class="text-3xl font-bold mb-8" style="color: var(--primary-green);">🎉 Events &amp; Special Occasions</h2>
+         <div id="events-photos-grid" class="gallery-grid"><!-- Photos will be dynamically loaded here -->
+         </div>
+        </div>
        </div>
       </div>
      </div>
@@ -1095,9 +1205,36 @@
      </div>
      <div id="video-url-field" style="display: none;"><label for="video-url" class="block text-sm font-semibold text-gray-700 mb-2">Video URL</label> <input type="url" id="video-url" class="form-input" placeholder="https://...">
       <p class="text-sm text-gray-500 mt-2"><strong>YouTube:</strong> Share URL (e.g., https://youtu.be/VIDEO_ID)<br><strong>Facebook:</strong> Video URL from Facebook<br><strong>Direct:</strong> Direct link to .mp4, .webm, or .ogg file</p>
-     </div><button type="submit" class="btn-primary w-full" id="submit-video-btn"> <span id="submit-text">➕ Add Video</span>
-      <div id="submit-spinner" class="loading-spinner" style="display: none;"></div></button>
+     </div><button type="submit" class="btn-primary w-full" id="submit-video-btn"> <span id="submit-video-text">➕ Add Video</span>
+      <div id="submit-video-spinner" class="loading-spinner" style="display: none;"></div></button>
     </form>
+   </div>
+  </div><!-- Add Photo Modal -->
+  <div id="add-photo-modal" class="modal">
+   <div class="modal-content"><button class="close-modal" onclick="closeAddPhotoModal()">×</button>
+    <h2 class="text-3xl font-bold mb-6 text-center" style="color: var(--primary-green);">Upload Photos</h2>
+    <form id="add-photo-form" class="space-y-6">
+     <div><label for="photo-category" class="block text-sm font-semibold text-gray-700 mb-2">Photo Category</label> <select id="photo-category" required class="form-input"> <option value="">Select a category</option> <option value="sunday">Sunday Service</option> <option value="firenight-photos">Fire Night</option> <option value="youth-photos">Youth Fellowship</option> <option value="events">Events &amp; Special Occasions</option> </select>
+     </div>
+     <div><label for="photo-event-name" class="block text-sm font-semibold text-gray-700 mb-2">Event Name (Optional)</label> <input type="text" id="photo-event-name" class="form-input" placeholder="e.g., Sunday Service - Jan 15, 2024">
+     </div>
+     <div><label for="photo-description" class="block text-sm font-semibold text-gray-700 mb-2">Description (Optional)</label> <textarea id="photo-description" class="form-input" placeholder="Brief description..."></textarea>
+     </div>
+     <div class="file-input-wrapper"><input type="file" id="photo-file" accept="image/*" multiple required onchange="previewPhotos()"> <label for="photo-file" class="file-input-label">
+       <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" style="color: var(--accent-blue);" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+       </svg><p>📸 Click to select photos</p><p class="text-xs mt-1">You can select multiple photos at once</p></label>
+     </div>
+     <div id="photo-preview" class="grid grid-cols-3 gap-2" style="display: none;"></div><button type="submit" class="btn-primary w-full" id="submit-photo-btn"> <span id="submit-photo-text">➕ Upload Photos</span>
+      <div id="submit-photo-spinner" class="loading-spinner" style="display: none;"></div></button>
+    </form>
+   </div>
+  </div><!-- View Photo Modal -->
+  <div id="view-photo-modal" class="modal">
+   <div class="modal-content photo-modal-content"><button class="close-modal" onclick="closeViewPhotoModal()">×</button> <img id="view-photo-image" src="" alt="Photo">
+    <div class="mt-4 text-center">
+     <h3 id="view-photo-title" class="text-2xl font-bold mb-2" style="color: var(--primary-green);"></h3>
+     <p id="view-photo-description" class="text-gray-600 mb-4"></p><button class="delete-btn" onclick="deleteCurrentPhoto()">🗑️ Delete Photo</button>
+    </div>
    </div>
   </div><!-- Toast Notification -->
   <div id="toast" class="toast">
@@ -1116,13 +1253,19 @@
       account_name: "Valentine Ifedayo Ministries"
     };
 
-    let allVideos = [];
+    let allMedia = [];
+    let currentPhotoToDelete = null;
+    let currentTab = 'videos';
 
     // Data SDK Handler
     const dataHandler = {
       onDataChanged(data) {
-        allVideos = data;
-        renderVideos();
+        allMedia = data;
+        if (currentTab === 'videos') {
+          renderVideos();
+        } else {
+          renderPhotos();
+        }
       }
     };
 
@@ -1246,6 +1389,25 @@
       mobileNav.classList.toggle('hidden');
     });
 
+    // Tab Switching
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-videos').classList.remove('active');
+      document.getElementById('tab-photos').classList.remove('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
+
+      document.getElementById('videos-content').style.display = tab === 'videos' ? 'block' : 'none';
+      document.getElementById('photos-content').style.display = tab === 'photos' ? 'block' : 'none';
+
+      if (tab === 'videos') {
+        renderVideos();
+      } else {
+        renderPhotos();
+      }
+    }
+
+    window.switchTab = switchTab;
+
     // Service accordion
     function toggleService(serviceId) {
       const details = document.getElementById(serviceId);
@@ -1284,7 +1446,7 @@
       }, 5000);
     });
 
-    // Video Management
+    // VIDEO MANAGEMENT
     function extractVideoId(url, type) {
       if (type === 'youtube') {
         const patterns = [
@@ -1342,7 +1504,7 @@
           ${video.description ? `<p class="text-gray-600 mb-4">${video.description}</p>` : ''}
           <div class="flex justify-between items-center">
             <span class="text-sm text-gray-500">${new Date(video.created_at).toLocaleDateString()}</span>
-            <button class="delete-video-btn" onclick="deleteVideo('${video.__backendId}')">🗑️ Delete</button>
+            <button class="delete-btn" onclick="deleteVideo('${video.__backendId}')">🗑️ Delete</button>
           </div>
         </div>
       `;
@@ -1359,7 +1521,7 @@
       };
 
       Object.values(grids).forEach(grid => {
-        grid.innerHTML = '';
+        if (grid) grid.innerHTML = '';
       });
 
       const videosByCategory = {
@@ -1369,7 +1531,7 @@
         testimonies: []
       };
 
-      allVideos.forEach(video => {
+      allMedia.filter(item => item.type === 'video').forEach(video => {
         if (videosByCategory[video.category]) {
           videosByCategory[video.category].push(video);
         }
@@ -1379,13 +1541,15 @@
         const videos = videosByCategory[category];
         const grid = grids[category];
 
+        if (!grid) return;
+
         if (videos.length === 0) {
           grid.innerHTML = `
             <div class="col-span-full text-center py-12">
               <svg class="w-24 h-24 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" style="color: var(--ash);" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
               </svg>
-              <p class="text-gray-500 text-lg">No videos yet. Click "Add New Video" to upload content.</p>
+              <p class="text-gray-500 text-lg">No videos yet. Click "Add Video Link" to add content.</p>
             </div>
           `;
         } else {
@@ -1395,6 +1559,126 @@
         }
       });
     }
+
+    // PHOTO MANAGEMENT
+    function previewPhotos() {
+      const fileInput = document.getElementById('photo-file');
+      const preview = document.getElementById('photo-preview');
+      preview.innerHTML = '';
+      preview.style.display = 'grid';
+
+      if (fileInput.files.length > 0) {
+        Array.from(fileInput.files).slice(0, 9).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'image-preview';
+            preview.appendChild(img);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    window.previewPhotos = previewPhotos;
+
+    function createPhotoCard(photo) {
+      const card = document.createElement('div');
+      card.className = 'photo-card';
+      card.dataset.photoId = photo.__backendId;
+
+      card.innerHTML = `
+        <img src="${photo.image_data}" alt="${photo.event_name || 'Photo'}" class="photo-image" onclick="viewPhoto('${photo.__backendId}')">
+        <div class="p-4">
+          <h3 class="text-lg font-bold mb-1" style="color: var(--primary-green);">${photo.event_name || 'Church Photo'}</h3>
+          ${photo.description ? `<p class="text-gray-600 text-sm mb-3">${photo.description}</p>` : ''}
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-500">${new Date(photo.created_at).toLocaleDateString()}</span>
+            <button class="delete-btn text-xs" onclick="deletePhoto('${photo.__backendId}')">🗑️</button>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    function renderPhotos() {
+      const grids = {
+        sunday: document.getElementById('sunday-photos-grid'),
+        'firenight-photos': document.getElementById('firenight-photos-grid'),
+        'youth-photos': document.getElementById('youth-photos-grid'),
+        events: document.getElementById('events-photos-grid')
+      };
+
+      Object.values(grids).forEach(grid => {
+        if (grid) grid.innerHTML = '';
+      });
+
+      const photosByCategory = {
+        sunday: [],
+        'firenight-photos': [],
+        'youth-photos': [],
+        events: []
+      };
+
+      allMedia.filter(item => item.type === 'photo').forEach(photo => {
+        if (photosByCategory[photo.category]) {
+          photosByCategory[photo.category].push(photo);
+        }
+      });
+
+      Object.keys(photosByCategory).forEach(category => {
+        const photos = photosByCategory[category];
+        const grid = grids[category];
+
+        if (!grid) return;
+
+        if (photos.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full text-center py-12">
+              <svg class="w-24 h-24 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" style="color: var(--ash);" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <p class="text-gray-500 text-lg">No photos yet. Click "Upload Photos" to add images.</p>
+            </div>
+          `;
+        } else {
+          photos.forEach(photo => {
+            grid.appendChild(createPhotoCard(photo));
+          });
+        }
+      });
+    }
+
+    // View Photo Modal
+    function viewPhoto(backendId) {
+      const photo = allMedia.find(p => p.__backendId === backendId);
+      if (!photo) return;
+
+      currentPhotoToDelete = photo;
+      document.getElementById('view-photo-image').src = photo.image_data;
+      document.getElementById('view-photo-title').textContent = photo.event_name || 'Church Photo';
+      document.getElementById('view-photo-description').textContent = photo.description || '';
+      document.getElementById('view-photo-modal').classList.add('active');
+    }
+
+    window.viewPhoto = viewPhoto;
+
+    function closeViewPhotoModal() {
+      document.getElementById('view-photo-modal').classList.remove('active');
+      currentPhotoToDelete = null;
+    }
+
+    window.closeViewPhotoModal = closeViewPhotoModal;
+
+    async function deleteCurrentPhoto() {
+      if (!currentPhotoToDelete) return;
+      await deletePhoto(currentPhotoToDelete.__backendId);
+      closeViewPhotoModal();
+    }
+
+    window.deleteCurrentPhoto = deleteCurrentPhoto;
 
     // Add Video Modal
     document.getElementById('add-video-btn').addEventListener('click', () => {
@@ -1423,14 +1707,14 @@
     document.getElementById('add-video-form').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      if (allVideos.length >= 999) {
+      if (allMedia.filter(m => m.type === 'video').length >= 999) {
         showToast('Maximum limit of 999 videos reached. Please delete some videos first.', 'error');
         return;
       }
 
       const submitBtn = document.getElementById('submit-video-btn');
-      const submitText = document.getElementById('submit-text');
-      const submitSpinner = document.getElementById('submit-spinner');
+      const submitText = document.getElementById('submit-video-text');
+      const submitSpinner = document.getElementById('submit-video-spinner');
 
       submitBtn.disabled = true;
       submitText.style.display = 'none';
@@ -1446,12 +1730,16 @@
 
       const newVideo = {
         id: Date.now().toString(),
+        type: 'video',
         category: category,
         title: title,
         description: description,
         video_type: videoType,
         video_url: videoId,
         thumbnail_url: '',
+        image_data: '',
+        event_name: '',
+        event_date: '',
         created_at: new Date().toISOString()
       };
 
@@ -1471,8 +1759,101 @@
       }
     });
 
+    // Add Photo Modal
+    document.getElementById('add-photo-btn').addEventListener('click', () => {
+      document.getElementById('add-photo-modal').classList.add('active');
+    });
+
+    function closeAddPhotoModal() {
+      document.getElementById('add-photo-modal').classList.remove('active');
+      document.getElementById('add-photo-form').reset();
+      document.getElementById('photo-preview').style.display = 'none';
+      document.getElementById('photo-preview').innerHTML = '';
+    }
+
+    window.closeAddPhotoModal = closeAddPhotoModal;
+
+    document.getElementById('add-photo-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fileInput = document.getElementById('photo-file');
+      if (!fileInput.files.length) {
+        showToast('Please select at least one photo.', 'error');
+        return;
+      }
+
+      if (allMedia.filter(m => m.type === 'photo').length + fileInput.files.length > 999) {
+        showToast('Maximum limit of 999 photos would be exceeded.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-photo-btn');
+      const submitText = document.getElementById('submit-photo-text');
+      const submitSpinner = document.getElementById('submit-photo-spinner');
+
+      submitBtn.disabled = true;
+      submitText.style.display = 'none';
+      submitSpinner.style.display = 'block';
+
+      const category = document.getElementById('photo-category').value;
+      const eventName = document.getElementById('photo-event-name').value;
+      const description = document.getElementById('photo-description').value;
+
+      let successCount = 0;
+
+      for (let file of fileInput.files) {
+        try {
+          const base64 = await fileToBase64(file);
+          
+          const newPhoto = {
+            id: Date.now().toString() + Math.random(),
+            type: 'photo',
+            category: category,
+            title: eventName || 'Church Photo',
+            description: description,
+            video_type: '',
+            video_url: '',
+            thumbnail_url: '',
+            image_data: base64,
+            event_name: eventName || 'Church Photo',
+            event_date: new Date().toISOString(),
+            created_at: new Date().toISOString()
+          };
+
+          if (window.dataSdk) {
+            const result = await window.dataSdk.create(newPhoto);
+            if (result.isOk) {
+              successCount++;
+            }
+          }
+        } catch (error) {
+          console.error('Error uploading photo:', error);
+        }
+      }
+
+      submitBtn.disabled = false;
+      submitText.style.display = 'inline';
+      submitSpinner.style.display = 'none';
+
+      if (successCount > 0) {
+        showToast(`${successCount} photo(s) uploaded successfully!`, 'success');
+        closeAddPhotoModal();
+      } else {
+        showToast('Failed to upload photos. Please try again.', 'error');
+      }
+    });
+
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
     async function deleteVideo(backendId) {
-      const video = allVideos.find(v => v.__backendId === backendId);
+      const video = allMedia.find(v => v.__backendId === backendId && v.type === 'video');
       if (!video) return;
 
       const card = document.querySelector(`[data-video-id="${backendId}"]`);
@@ -1498,6 +1879,33 @@
 
     window.deleteVideo = deleteVideo;
 
+    async function deletePhoto(backendId) {
+      const photo = allMedia.find(p => p.__backendId === backendId && p.type === 'photo');
+      if (!photo) return;
+
+      const card = document.querySelector(`[data-photo-id="${backendId}"]`);
+      if (card) {
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+      }
+
+      if (window.dataSdk) {
+        const result = await window.dataSdk.delete(photo);
+        
+        if (result.isOk) {
+          showToast('Photo deleted successfully!', 'success');
+        } else {
+          showToast('Failed to delete photo. Please try again.', 'error');
+          if (card) {
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+          }
+        }
+      }
+    }
+
+    window.deletePhoto = deletePhoto;
+
     function showToast(message, type) {
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toast-message');
@@ -1512,12 +1920,24 @@
       }, 3000);
     }
 
-    // Close modal when clicking outside
+    // Close modals when clicking outside
     document.getElementById('add-video-modal').addEventListener('click', (e) => {
       if (e.target.id === 'add-video-modal') {
         closeAddVideoModal();
       }
     });
+
+    document.getElementById('add-photo-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'add-photo-modal') {
+        closeAddPhotoModal();
+      }
+    });
+
+    document.getElementById('view-photo-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'view-photo-modal') {
+        closeViewPhotoModal();
+      }
+    });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a51897e50f5f047',t:'MTc2NDI0NTU4MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>Initial website code
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a51b86314715350',t:'MTc2NDI0NzUwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
