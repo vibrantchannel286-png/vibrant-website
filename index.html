@@ -1393,21 +1393,30 @@
      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
       <h3 style="color: #78350f; margin-bottom: 20px;">������️ Update Church Logo</h3>
       <form id="logoUploadForm" onsubmit="handleLogoUpload(event)">
-       <div class="form-group"><label for="logoUrl">Logo Image URL: *</label> <input type="text" id="logoUrl" placeholder="Paste logo image link from Imgur or ImgBB" required> <small style="display: block; margin-top: 5px; color: #78350f;"> Upload your logo to <a href="https://imgur.com" target="_blank" style="color: #f59e0b; font-weight: 600;">Imgur</a> or <a href="https://imgbb.com" target="_blank" style="color: #f59e0b; font-weight: 600;">ImgBB</a> first, then paste the direct image link here </small>
+       <div class="form-group"><label for="logoFile">Upload Logo from Computer: *</label> <input type="file" id="logoFile" accept="image/*" required style="padding: 10px; border: 2px dashed #f59e0b; background: #fffbeb;"> <small style="display: block; margin-top: 5px; color: #78350f;"> 📁 Select a logo image from your computer (JPG, PNG, GIF) </small>
+        <div id="logoPreview" style="margin-top: 15px; display: none;">
+         <p style="color: #78350f; font-weight: 600; margin-bottom: 10px;">Preview:</p><img id="logoPreviewImage" style="max-width: 150px; max-height: 150px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        </div>
        </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">📤 Update Logo</button>
       </form>
      </div><!-- Update Hero Banner Section -->
      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
       <h3 style="color: #78350f; margin-bottom: 20px;">🖼️ Update Hero Banner Image</h3>
       <form id="heroBannerForm" onsubmit="handleHeroBannerUpload(event)">
-       <div class="form-group"><label for="heroBannerUrl">Hero Banner Image URL: *</label> <input type="text" id="heroBannerUrl" placeholder="Paste banner image link from Imgur or ImgBB" required> <small style="display: block; margin-top: 5px; color: #78350f;"> Upload your banner image to <a href="https://imgur.com" target="_blank" style="color: #f59e0b; font-weight: 600;">Imgur</a> or <a href="https://imgbb.com" target="_blank" style="color: #f59e0b; font-weight: 600;">ImgBB</a> first, then paste the direct image link here </small>
+       <div class="form-group"><label for="heroBannerFile">Upload Banner from Computer: *</label> <input type="file" id="heroBannerFile" accept="image/*" required style="padding: 10px; border: 2px dashed #f59e0b; background: #fffbeb;"> <small style="display: block; margin-top: 5px; color: #78350f;"> 📁 Select a banner image from your computer (JPG, PNG, GIF) </small>
+        <div id="bannerPreview" style="margin-top: 15px; display: none;">
+         <p style="color: #78350f; font-weight: 600; margin-bottom: 10px;">Preview:</p><img id="bannerPreviewImage" style="max-width: 100%; max-height: 200px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        </div>
        </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">📤 Update Banner</button>
       </form>
      </div><!-- Update Prophet Photo Section -->
      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
       <h3 style="color: #78350f; margin-bottom: 20px;">👤 Update Pastor's Photo</h3>
       <form id="prophetPhotoForm" onsubmit="handleProphetPhotoUpload(event)">
-       <div class="form-group"><label for="prophetPhotoUrl">Pastor Photo URL: *</label> <input type="text" id="prophetPhotoUrl" placeholder="Paste photo link from Imgur or ImgBB" required> <small style="display: block; margin-top: 5px; color: #78350f;"> Upload the pastor's photo to <a href="https://imgur.com" target="_blank" style="color: #f59e0b; font-weight: 600;">Imgur</a> or <a href="https://imgbb.com" target="_blank" style="color: #f59e0b; font-weight: 600;">ImgBB</a> first, then paste the direct image link here </small>
+       <div class="form-group"><label for="prophetPhotoFile">Upload Pastor Photo from Computer: *</label> <input type="file" id="prophetPhotoFile" accept="image/*" required style="padding: 10px; border: 2px dashed #f59e0b; background: #fffbeb;"> <small style="display: block; margin-top: 5px; color: #78350f;"> 📁 Select the pastor's photo from your computer (JPG, PNG, GIF) </small>
+        <div id="prophetPhotoPreview" style="margin-top: 15px; display: none;">
+         <p style="color: #78350f; font-weight: 600; margin-bottom: 10px;">Preview:</p><img id="prophetPhotoPreviewImage" style="max-width: 250px; max-height: 250px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        </div>
        </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">📤 Update Photo</button>
       </form>
      </div><!-- Update About Us Content -->
@@ -2066,8 +2075,9 @@
       }
     }
 
-    // Image file preview
+    // Image file preview handlers
     document.addEventListener('DOMContentLoaded', function() {
+      // Admin media upload preview
       const imageFileInput = document.getElementById('adminImageFile');
       if (imageFileInput) {
         imageFileInput.addEventListener('change', function(event) {
@@ -2077,6 +2087,63 @@
             reader.onload = function(e) {
               const previewImage = document.getElementById('previewImage');
               const imagePreview = document.getElementById('imagePreview');
+              
+              previewImage.src = e.target.result;
+              imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Logo preview
+      const logoFileInput = document.getElementById('logoFile');
+      if (logoFileInput) {
+        logoFileInput.addEventListener('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const previewImage = document.getElementById('logoPreviewImage');
+              const imagePreview = document.getElementById('logoPreview');
+              
+              previewImage.src = e.target.result;
+              imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Banner preview
+      const bannerFileInput = document.getElementById('heroBannerFile');
+      if (bannerFileInput) {
+        bannerFileInput.addEventListener('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const previewImage = document.getElementById('bannerPreviewImage');
+              const imagePreview = document.getElementById('bannerPreview');
+              
+              previewImage.src = e.target.result;
+              imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // Prophet photo preview
+      const prophetPhotoInput = document.getElementById('prophetPhotoFile');
+      if (prophetPhotoInput) {
+        prophetPhotoInput.addEventListener('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              const previewImage = document.getElementById('prophetPhotoPreviewImage');
+              const imagePreview = document.getElementById('prophetPhotoPreview');
               
               previewImage.src = e.target.result;
               imagePreview.style.display = 'block';
@@ -2101,19 +2168,24 @@
         return;
       }
 
-      const logoUrl = document.getElementById('logoUrl').value.trim();
+      const logoFile = document.getElementById('logoFile').files[0];
       const submitBtn = event.target.querySelector('button[type="submit"]');
 
-      if (!logoUrl) {
-        showToast('❌ Please enter a valid logo URL.', 'error');
+      if (!logoFile) {
+        showToast('❌ Please select a logo image file.', 'error');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = '🔄 Updating...';
+      submitBtn.textContent = '🔄 Uploading...';
 
       try {
-        // Save to localStorage (Firebase write operations work now)
+        // Upload to Firebase Storage
+        const storageRef = storage.ref(`logos/${Date.now()}_${logoFile.name}`);
+        const uploadTask = await storageRef.put(logoFile);
+        const logoUrl = await uploadTask.ref.getDownloadURL();
+        
+        // Save to localStorage
         localStorage.setItem('vimLogoUrl', logoUrl);
         
         // Update logo display immediately
@@ -2136,8 +2208,9 @@
           console.log('Firestore save skipped:', firestoreError);
         }
 
-        showToast('✅ Church logo updated successfully!', 'success');
+        showToast('✅ Church logo uploaded successfully!', 'success');
         document.getElementById('logoUploadForm').reset();
+        document.getElementById('logoPreview').style.display = 'none';
       } catch (error) {
         console.error('Logo upload error:', error);
         showToast(`❌ Update failed: ${error.message}`, 'error');
@@ -2161,18 +2234,23 @@
         return;
       }
 
-      const bannerUrl = document.getElementById('heroBannerUrl').value.trim();
+      const bannerFile = document.getElementById('heroBannerFile').files[0];
       const submitBtn = event.target.querySelector('button[type="submit"]');
 
-      if (!bannerUrl) {
-        showToast('❌ Please enter a valid banner URL.', 'error');
+      if (!bannerFile) {
+        showToast('❌ Please select a banner image file.', 'error');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = '🔄 Updating...';
+      submitBtn.textContent = '🔄 Uploading...';
 
       try {
+        // Upload to Firebase Storage
+        const storageRef = storage.ref(`banners/${Date.now()}_${bannerFile.name}`);
+        const uploadTask = await storageRef.put(bannerFile);
+        const bannerUrl = await uploadTask.ref.getDownloadURL();
+        
         // Save to localStorage
         localStorage.setItem('vimHeroBannerUrl', bannerUrl);
         
@@ -2193,8 +2271,9 @@
           console.log('Firestore save skipped:', firestoreError);
         }
 
-        showToast('✅ Hero banner updated successfully!', 'success');
+        showToast('✅ Hero banner uploaded successfully!', 'success');
         document.getElementById('heroBannerForm').reset();
+        document.getElementById('bannerPreview').style.display = 'none';
       } catch (error) {
         console.error('Banner upload error:', error);
         showToast(`❌ Update failed: ${error.message}`, 'error');
@@ -2218,18 +2297,23 @@
         return;
       }
 
-      const photoUrl = document.getElementById('prophetPhotoUrl').value.trim();
+      const photoFile = document.getElementById('prophetPhotoFile').files[0];
       const submitBtn = event.target.querySelector('button[type="submit"]');
 
-      if (!photoUrl) {
-        showToast('❌ Please enter a valid photo URL.', 'error');
+      if (!photoFile) {
+        showToast('❌ Please select a photo image file.', 'error');
         return;
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = '🔄 Updating...';
+      submitBtn.textContent = '🔄 Uploading...';
 
       try {
+        // Upload to Firebase Storage
+        const storageRef = storage.ref(`photos/${Date.now()}_${photoFile.name}`);
+        const uploadTask = await storageRef.put(photoFile);
+        const photoUrl = await uploadTask.ref.getDownloadURL();
+        
         // Save to localStorage
         localStorage.setItem('vimProphetPhotoUrl', photoUrl);
         
@@ -2250,8 +2334,9 @@
           console.log('Firestore save skipped:', firestoreError);
         }
 
-        showToast('✅ Pastor photo updated successfully!', 'success');
+        showToast('✅ Pastor photo uploaded successfully!', 'success');
         document.getElementById('prophetPhotoForm').reset();
+        document.getElementById('prophetPhotoPreview').style.display = 'none';
       } catch (error) {
         console.error('Photo upload error:', error);
         showToast(`❌ Update failed: ${error.message}`, 'error');
@@ -2847,5 +2932,5 @@
       document.getElementById('contactForm').reset();
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5ac7f777d1edbd',t:'MTc2NDM0MjUxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5acfc51206edbd',t:'MTc2NDM0MjgzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
