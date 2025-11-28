@@ -978,7 +978,7 @@
       <p style="color: #78350f; font-size: 0.9em; margin: 0;">��� <strong>Authorized Admins Only:</strong><br>
         • eiweh123@gmail.com<br>
         • vibrantchannel286@gmail.com</p>
-     </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">���������� Login as Admin</button>
+     </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">�������������� Login as Admin</button>
     </form>
    </div>
   </div><!-- Auth Modal -->
@@ -1144,7 +1144,7 @@
       <p style="text-align: center; margin-bottom: 20px;">Make a secure donation using PayPal, debit or credit card</p>
       <div class="btn-group"><a href="https://www.paypal.me/Funmzyanie" target="_blank" rel="noopener noreferrer" class="btn">💙 Give via PayPal</a> <a href="https://paystack.com" target="_blank" rel="noopener noreferrer" class="btn">Pay with Paystack</a> <a href="https://flutterwave.com" target="_blank" rel="noopener noreferrer" class="btn">Pay with Flutterwave</a>
       </div>
-      <p style="text-align: center; margin-top: 15px; font-size: 0.95em; opacity: 0.9;">⚡ Instant • 🔒 Secure • ���� Available Worldwide</p>
+      <p style="text-align: center; margin-top: 15px; font-size: 0.95em; opacity: 0.9;">⚡ Instant • ��� Secure • ���� Available Worldwide</p>
      </div>
      <div class="account-box">
       <h3>🏦 Bank Transfer Details</h3>
@@ -1476,6 +1476,24 @@
      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
       <h3 style="color: #78350f; margin-bottom: 20px; text-align: center;">🙏 Prayer Requests</h3><button onclick="loadAndDisplayPrayerRequests()" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">📋 View All Prayer Requests</button>
       <div id="prayerRequestsList" style="margin-top: 20px;"></div>
+     </div>
+    </div>
+   </section><!-- ACCOUNT SECTION -->
+   <section id="account" class="section">
+    <div class="content-card">
+     <h2 style="text-align: center;">👤 My Account</h2>
+     <p style="font-size: 1.1em; text-align: center; margin-bottom: 30px; color: #4b5563;" id="accountWelcome">Welcome to your account dashboard</p>
+     <div class="account-box" id="accountDetailsBox">
+      <h3>📋 Account Information</h3>
+      <div class="account-details">
+       <p><strong>Name:</strong> <span id="accountName">Loading...</span></p>
+       <p><strong>Email:</strong> <span id="accountEmail">Loading...</span></p>
+       <p><strong>Phone:</strong> <span id="accountPhone">Loading...</span></p>
+       <p><strong>Account Type:</strong> <span id="accountType">Loading...</span></p>
+       <p><strong>Member Since:</strong> <span id="accountRegistered">Loading...</span></p>
+      </div>
+     </div>
+     <div style="text-align: center; margin-top: 30px;"><button class="btn" style="background: #dc2626;" onclick="handleLogout()">🚪 Logout</button>
      </div>
     </div>
    </section><!-- CONTACT SECTION -->
@@ -2856,7 +2874,53 @@
         dropdown.classList.remove('active');
       }
 
+      // Load account details if showing account section
+      if (sectionId === 'account') {
+        loadAccountDetails();
+      }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Load account details
+    async function loadAccountDetails() {
+      if (!currentUser) {
+        showToast('❌ Please login first to view your account.', 'error');
+        openAuthModal();
+        return;
+      }
+
+      // Update welcome message
+      document.getElementById('accountWelcome').textContent = `Welcome, ${currentUser.name}!`;
+
+      // Display user details
+      document.getElementById('accountName').textContent = currentUser.name || 'Not provided';
+      document.getElementById('accountEmail').textContent = currentUser.email || 'Not provided';
+      document.getElementById('accountPhone').textContent = currentUser.phone || 'Not provided';
+      
+      const accountTypeText = ADMIN_EMAILS.includes(currentUser.email) ? '👑 Admin' : '👤 Member';
+      document.getElementById('accountType').textContent = accountTypeText;
+
+      // Get registration date from Firestore
+      try {
+        const userDoc = await db.collection('users').doc(currentUser.uid).get();
+        if (userDoc.exists) {
+          const userData = userDoc.data();
+          if (userData.registeredAt) {
+            const registeredDate = userData.registeredAt.toDate().toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+            document.getElementById('accountRegistered').textContent = registeredDate;
+          } else {
+            document.getElementById('accountRegistered').textContent = 'Date not available';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading registration date:', error);
+        document.getElementById('accountRegistered').textContent = 'Date not available';
+      }
     }
 
     // Toast notification function
@@ -2932,5 +2996,5 @@
       document.getElementById('contactForm').reset();
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5ae2494662412d',t:'MTc2NDM0MzU4OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5ae6a8d6f2412d',t:'MTc2NDM0Mzc2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
