@@ -1050,12 +1050,12 @@
     <div class="content-card">
      <h2>About Vibrant Impact Ministries</h2>
      <h3>Our Story</h3>
-     <p>Vibrant Impact Ministries was established in 2020 with a divine mandate to raise vibrant believers who will make a lasting impact in the Kingdom of God. Since our inception, we have been committed to teaching the uncompromised Word of God, operating in prophetic ministry, and equipping believers for supernatural living.</p>
-     <p>Located in Akure, Ondo State, Nigeria, we are a growing community of believers passionate about God's presence, His Word, and making a difference in our generation.</p>
+     <p id="churchStoryContent">Vibrant Impact Ministries was established in 2020 with a divine mandate to raise vibrant believers who will make a lasting impact in the Kingdom of God. Since our inception, we have been committed to teaching the uncompromised Word of God, operating in prophetic ministry, and equipping believers for supernatural living.</p>
+     <p id="churchStoryContent2">Located in Akure, Ondo State, Nigeria, we are a growing community of believers passionate about God's presence, His Word, and making a difference in our generation.</p>
      <h3>Our Vision</h3>
-     <p>To raise a generation of vibrant believers who are grounded in the Word of God, empowered by the Holy Spirit, and committed to making a kingdom impact in their spheres of influence.</p>
+     <p id="churchVisionContent">To raise a generation of vibrant believers who are grounded in the Word of God, empowered by the Holy Spirit, and committed to making a kingdom impact in their spheres of influence.</p>
      <h3>Our Mission</h3>
-     <p>To teach the Word of God with accuracy and power, to operate in prophetic ministry, to equip believers for ministry and marketplace excellence, and to raise leaders who will transform their communities through the gospel of Jesus Christ.</p>
+     <p id="churchMissionContent">To teach the Word of God with accuracy and power, to operate in prophetic ministry, to equip believers for ministry and marketplace excellence, and to raise leaders who will transform their communities through the gospel of Jesus Christ.</p>
      <h3>What We Believe</h3>
      <p><strong>• The Bible:</strong> We believe the Bible is the inspired and infallible Word of God, our final authority for faith and practice.</p>
      <p><strong>• Salvation:</strong> We believe in salvation through faith in Jesus Christ alone, His death, burial, and resurrection.</p>
@@ -1395,7 +1395,7 @@
      <h2 style="color: #f59e0b; text-align: center;">⚙️ Admin Settings &amp; Controls</h2>
      <p style="text-align: center; color: #78350f; font-size: 1.1em; margin-bottom: 40px;">👑 Manage all church content, media, and settings from this admin panel</p><!-- Upload Logo Section -->
      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
-      <h3 style="color: #78350f; margin-bottom: 20px;">����️ Update Church Logo</h3>
+      <h3 style="color: #78350f; margin-bottom: 20px;">������️ Update Church Logo</h3>
       <form id="logoUploadForm" onsubmit="handleLogoUpload(event)">
        <div class="form-group"><label for="logoUrl">Logo Image URL: *</label> <input type="text" id="logoUrl" placeholder="Paste logo image link from Imgur or ImgBB" required> <small style="display: block; margin-top: 5px; color: #78350f;"> Upload your logo to <a href="https://imgur.com" target="_blank" style="color: #f59e0b; font-weight: 600;">Imgur</a> or <a href="https://imgbb.com" target="_blank" style="color: #f59e0b; font-weight: 600;">ImgBB</a> first, then paste the direct image link here </small>
        </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">📤 Update Logo</button>
@@ -1441,9 +1441,9 @@
        </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">💾 Update Social Links</button>
       </form>
      </div><!-- Media Upload Section -->
-     <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #3b82f6;">
+     <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #3b82f6; display: block;" id="adminMediaUploadSection">
       <h3 style="color: #1e3a8a; margin-bottom: 20px; text-align: center;">📤 Upload Videos &amp; Images</h3>
-      <p style="text-align: center; color: #1e3a8a; margin-bottom: 25px;">Add church videos, service photos, and event images</p>
+      <p style="text-align: center; color: #1e3a8a; margin-bottom: 25px;">Add church videos, service photos, and event images to the Media Gallery</p>
       <form id="adminMediaUploadForm" onsubmit="handleAdminMediaUpload(event)">
        <div class="form-group"><label for="adminMediaType">Media Type: *</label> <select id="adminMediaType" required onchange="toggleAdminMediaFields()"> <option value="">-- Select Type --</option> <option value="video">Video (YouTube/Facebook Link)</option> <option value="image">Image (Upload Photo)</option> </select>
        </div>
@@ -1529,7 +1529,7 @@
    <p><strong>Vibrant Impact Ministries</strong></p>
    <p>Ughele Junction, Along Ado Road, Akure, Ondo State, Nigeria</p>
    <p>📧 pastorvalentineifedayo@gmail.com | 📱 +234 816 994 8626</p>
-   <p style="margin-top: 20px;">© 2024 Vibrant Impact Ministries. All Rights Reserved.</p>
+   <p style="margin-top: 20px;">�� 2024 Vibrant Impact Ministries. All Rights Reserved.</p>
    <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">Powered by God's Grace</p>
   </footer>
   <script>
@@ -1863,7 +1863,7 @@
         showSection('home');
       } catch (error) {
         console.error('Logout error:', error);
-        showToast('❌ Failed to logout. Please try again.', 'error');
+        showToast('�� Failed to logout. Please try again.', 'error');
         document.getElementById('logoutOverlay').remove();
       }
     }
@@ -2000,14 +2000,25 @@
       const savedMission = localStorage.getItem('vimChurchMission');
       
       // Update about section content if saved data exists
-      const aboutSection = document.getElementById('about');
-      if (aboutSection) {
-        const storyParagraph = aboutSection.querySelector('h3:contains("Our Story") + p');
-        const visionParagraph = aboutSection.querySelector('h3:contains("Our Vision") + p');
-        const missionParagraph = aboutSection.querySelector('h3:contains("Our Mission") + p');
-        
-        // Note: We'll update the content on the page directly
-        // This is a simplified approach - in production you'd want more robust selectors
+      if (savedStory) {
+        const storyElement = document.getElementById('churchStoryContent');
+        if (storyElement) {
+          storyElement.textContent = savedStory;
+        }
+      }
+      
+      if (savedVision) {
+        const visionElement = document.getElementById('churchVisionContent');
+        if (visionElement) {
+          visionElement.textContent = savedVision;
+        }
+      }
+      
+      if (savedMission) {
+        const missionElement = document.getElementById('churchMissionContent');
+        if (missionElement) {
+          missionElement.textContent = savedMission;
+        }
       }
     }
 
@@ -2107,7 +2118,7 @@
         showToast(`❌ Update failed: ${error.message}`, 'error');
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = '📤 Update Logo';
+        submitBtn.textContent = '��� Update Logo';
       }
     }
 
@@ -2253,6 +2264,28 @@
         localStorage.setItem('vimChurchVision', vision);
         localStorage.setItem('vimChurchMission', mission);
 
+        // Update content on page immediately
+        if (story) {
+          const storyElement = document.getElementById('churchStoryContent');
+          if (storyElement) {
+            storyElement.textContent = story;
+          }
+        }
+        
+        if (vision) {
+          const visionElement = document.getElementById('churchVisionContent');
+          if (visionElement) {
+            visionElement.textContent = vision;
+          }
+        }
+        
+        if (mission) {
+          const missionElement = document.getElementById('churchMissionContent');
+          if (missionElement) {
+            missionElement.textContent = mission;
+          }
+        }
+
         // Try to save to Firestore
         try {
           await db.collection('settings').doc('aboutContent').set({
@@ -2266,7 +2299,8 @@
           console.log('Firestore save skipped:', firestoreError);
         }
 
-        showToast('✅ About content updated successfully! Refresh page to see changes.', 'success');
+        showToast('✅ About content updated successfully! Changes are now live.', 'success');
+        document.getElementById('aboutContentForm').reset();
       } catch (error) {
         console.error('About content update error:', error);
         showToast(`❌ Update failed: ${error.message}`, 'error');
@@ -2786,5 +2820,5 @@
       document.getElementById('contactForm').reset();
     }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5646cc90ddae03',t:'MTc2NDI5NTI3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5a986e558fedbd',t:'MTc2NDM0MDU2NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
