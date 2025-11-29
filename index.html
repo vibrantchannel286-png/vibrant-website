@@ -1035,7 +1035,34 @@
       <div class="btn-group"><button class="btn" onclick="showSection('services')">📅 Service Days</button> <button class="btn" onclick="showSection('giving')">💝 Give Online</button> <button class="btn" onclick="showSection('media')">🎥 Watch Live</button> <a href="https://chat.whatsapp.com/your-group-link" target="_blank" rel="noopener noreferrer" class="btn" style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);"> 💬 Join WhatsApp Group </a>
       </div>
      </div>
+    </div><!-- Live Streaming Alert on Home Page (Hidden by default) -->
+    <div id="homeLiveAlert" style="display: none; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); padding: 30px; border-radius: 20px; margin-bottom: 40px; text-align: center; border: 3px solid #fca5a5; box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4); animation: pulse 2s ease-in-out infinite;">
+     <h3 style="color: white; font-size: 2.2em; margin-bottom: 15px;">🔴 WE ARE LIVE NOW!</h3>
+     <p style="color: white; font-size: 1.3em; margin-bottom: 25px;">Join us for live worship and teaching!</p>
+     <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;"><button onclick="showLiveStreamOnHome('youtube')" class="btn" style="background: #ff0000; font-size: 1.1em; padding: 15px 30px;">📺 Watch on YouTube</button> <button onclick="showLiveStreamOnHome('facebook')" class="btn" style="background: #1877f2; font-size: 1.1em; padding: 15px 30px;">📘 Watch on Facebook</button> <button onclick="showLiveStreamOnHome('tiktok')" class="btn" style="background: #000000; font-size: 1.1em; padding: 15px 30px;">🎵 Watch on TikTok</button>
+     </div>
+     <div id="homeLiveStreamContainer" style="display: none; margin-top: 30px;">
+      <div style="background: white; padding: 25px; border-radius: 15px;">
+       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h4 id="homeLiveStreamTitle" style="color: #1e3a8a; margin: 0; font-size: 1.3em;">Live Stream</h4><button onclick="closeHomeLiveStream()" style="background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 1em;">✖ Close</button>
+       </div>
+       <div id="homeLiveStreamEmbed"></div>
+       <p style="color: #6b7280; margin-top: 15px; font-size: 1em;" id="homeLiveStreamNote"></p>
+      </div>
+     </div>
     </div>
+    <style>
+        @keyframes pulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
+          }
+          50% {
+            transform: scale(1.02);
+            box-shadow: 0 12px 40px rgba(220, 38, 38, 0.6);
+          }
+        }
+      </style>
     <h2 style="color: #1e3a8a; font-size: 2.5em; text-align: center; margin: 40px 0 30px;">Upcoming Events</h2>
     <div class="events-grid">
      <div class="event-card">
@@ -1225,7 +1252,22 @@
    <section id="media" class="section">
     <div class="content-card">
      <h2>Media Gallery</h2>
-     <p>Watch our latest sermons, teachings, and event highlights. New content added regularly!</p>
+     <p>Watch our latest sermons, teachings, and event highlights. New content added regularly!</p><!-- Live Streaming Section (Hidden by default) -->
+     <div id="mediaLiveAlert" style="display: none; background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); padding: 30px; border-radius: 20px; margin-bottom: 40px; text-align: center; border: 3px solid #fca5a5; box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);">
+      <h3 style="color: white; font-size: 2em; margin-bottom: 15px;">🔴 LIVE STREAMING</h3>
+      <p style="color: white; font-size: 1.2em; margin-bottom: 25px;">Watch our services live as they happen!</p>
+      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;"><button onclick="showLiveStream('youtube')" class="btn" style="background: #ff0000;">📺 YouTube Live</button> <button onclick="showLiveStream('facebook')" class="btn" style="background: #1877f2;">📘 Facebook Live</button> <button onclick="showLiveStream('tiktok')" class="btn" style="background: #000000;">🎵 TikTok Live</button>
+      </div>
+      <div id="liveStreamContainer" style="display: none; margin-top: 25px;">
+       <div style="background: white; padding: 20px; border-radius: 15px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+         <h4 id="liveStreamTitle" style="color: #1e3a8a; margin: 0;">Live Stream</h4><button onclick="closeLiveStream()" style="background: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">✖ Close</button>
+        </div>
+        <div id="liveStreamEmbed"></div>
+        <p style="color: #6b7280; margin-top: 15px; font-size: 0.95em;" id="liveStreamNote"></p>
+       </div>
+      </div>
+     </div>
      <h3 style="margin-top: 40px;">🎥 Recent Sermons</h3>
      <div class="video-grid" id="recentSermonsGrid">
       <div class="video-card">
@@ -1385,7 +1427,7 @@
      <div class="contact-grid" style="margin-top: 40px;">
       <div class="contact-card">
        <div class="icon">
-        📧
+        ���
        </div>
        <h3>Email Us</h3>
        <p><a href="mailto:pastorvalentineifedayo@gmail.com">pastorvalentineifedayo@gmail.com</a></p>
@@ -1526,8 +1568,47 @@
       <div id="partnersList" style="margin-top: 20px;"></div>
      </div><!-- View All Prayer Requests -->
      <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
-      <h3 style="color: #78350f; margin-bottom: 20px; text-align: center;">🙏 Prayer Requests</h3><button onclick="loadAndDisplayPrayerRequests()" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">📋 View All Prayer Requests</button>
+      <h3 style="color: #78350f; margin-bottom: 20px; text-align: center;">🙏 Prayer Requests</h3><button onclick="loadAndDisplayPrayerRequests()" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">�� View All Prayer Requests</button>
       <div id="prayerRequestsList" style="margin-top: 20px;"></div>
+     </div><!-- Live Status Toggle -->
+     <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #dc2626;">
+      <h3 style="color: #7f1d1d; margin-bottom: 20px;">🔴 Live Streaming Status</h3>
+      <p style="color: #7f1d1d; margin-bottom: 20px;">Control when the "WE ARE LIVE NOW" banner appears on the home page and media page for all visitors.</p>
+      <div style="background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+        <div>
+         <h4 style="color: #1e3a8a; margin-bottom: 10px; font-size: 1.3em;">Current Status: <span id="liveStatusText" style="color: #dc2626;">● OFFLINE</span></h4>
+         <p style="color: #6b7280; margin: 0;">Toggle this ON when you start streaming live, and OFF when you finish.</p>
+        </div>
+        <div style="display: flex; gap: 15px;"><button onclick="setLiveStatus(true)" class="btn" style="background: #dc2626; padding: 15px 30px; font-size: 1.1em;">🔴 GO LIVE</button> <button onclick="setLiveStatus(false)" class="btn" style="background: #6b7280; padding: 15px 30px; font-size: 1.1em;">⚫ END LIVE</button>
+        </div>
+       </div>
+      </div>
+      <div style="background: rgba(220, 38, 38, 0.1); padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #dc2626;">
+       <p style="color: #7f1d1d; font-size: 0.95em; margin: 0;">💡 <strong>How it works:</strong><br>
+         • Click "GO LIVE" when you start streaming → The live banner appears for all visitors<br>
+         • Click "END LIVE" when you finish → The banner disappears<br>
+         • Make sure you've configured your live stream URLs below first!</p>
+      </div>
+     </div><!-- Live Stream URLs Configuration -->
+     <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid #f59e0b;">
+      <h3 style="color: #78350f; margin-bottom: 20px;">🔗 Configure Live Stream URLs</h3>
+      <p style="color: #78350f; margin-bottom: 20px;">Set up your live streaming links for YouTube, Facebook, and TikTok. These will be used when members click the live stream buttons.</p>
+      <form id="liveStreamUrlsForm" onsubmit="handleLiveStreamUrlsUpdate(event)">
+       <div class="form-group"><label for="youtubeLiveUrl">YouTube Live URL:</label> <input type="url" id="youtubeLiveUrl" placeholder="https://www.youtube.com/watch?v=..."> <small style="display: block; margin-top: 5px; color: #78350f;"> 📺 Paste your YouTube live stream or video URL (e.g., https://www.youtube.com/watch?v=xxxxx) </small>
+       </div>
+       <div class="form-group"><label for="facebookLiveUrl">Facebook Live URL:</label> <input type="url" id="facebookLiveUrl" placeholder="https://www.facebook.com/..."> <small style="display: block; margin-top: 5px; color: #78350f;"> 📘 Paste your Facebook live video URL (make sure the video is set to Public) </small>
+       </div>
+       <div class="form-group"><label for="tiktokLiveUrl">TikTok Video URL:</label> <input type="url" id="tiktokLiveUrl" placeholder="https://www.tiktok.com/@username/video/..."> <small style="display: block; margin-top: 5px; color: #78350f;"> 🎵 Paste your TikTok video URL (Note: TikTok embeds work best on mobile) </small>
+       </div>
+       <div style="background: rgba(251, 191, 36, 0.2); padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #f59e0b;">
+        <p style="color: #78350f; font-size: 0.95em; margin: 0;">💡 <strong>Pro Tips:</strong><br>
+          • Update these URLs before each live service<br>
+          • YouTube: Use your live stream URL or any uploaded video<br>
+          ��� Facebook: Make sure your live video is set to Public visibility<br>
+          • TikTok: Works best when members view directly on TikTok app</p>
+       </div><button type="submit" class="btn" style="width: 100%; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">💾 Save Live Stream URLs</button>
+      </form>
      </div>
     </div>
    </section><!-- ACCOUNT SECTION -->
@@ -2341,7 +2422,7 @@
       }
 
       if (!ADMIN_EMAILS.includes(currentUser.email)) {
-        showToast('❌ Only admins can upload.', 'error');
+        showToast('��� Only admins can upload.', 'error');
         return;
       }
 
@@ -3242,6 +3323,378 @@
       showToast('📧 Your message has been prepared! Please send the email to complete.', 'success');
       document.getElementById('contactForm').reset();
     }
+
+    // Live streaming functions
+    function showLiveStream(platform) {
+      const container = document.getElementById('liveStreamContainer');
+      const embedDiv = document.getElementById('liveStreamEmbed');
+      const title = document.getElementById('liveStreamTitle');
+      const note = document.getElementById('liveStreamNote');
+
+      // Get saved live stream URLs from localStorage
+      const youtubeUrl = localStorage.getItem('vimYoutubeLiveUrl') || '';
+      const facebookUrl = localStorage.getItem('vimFacebookLiveUrl') || '';
+      const tiktokUrl = localStorage.getItem('vimTiktokLiveUrl') || '';
+
+      let embedCode = '';
+      let platformName = '';
+      let noteText = '';
+
+      if (platform === 'youtube') {
+        platformName = '📺 YouTube Live';
+        if (youtubeUrl) {
+          const videoId = extractYouTubeId(youtubeUrl);
+          embedCode = `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+              <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowfullscreen>
+              </iframe>
+            </div>
+          `;
+          noteText = '🔴 Live stream from YouTube. If the stream has ended, you\'ll see the recorded video.';
+        } else {
+          embedCode = `
+            <div style="background: #f3f4f6; padding: 40px; border-radius: 12px; text-align: center;">
+              <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">📺 YouTube Live stream link has not been configured yet.</p>
+              ${currentUser && ADMIN_EMAILS.includes(currentUser.email) ? 
+                '<p style="color: #3b82f6; font-weight: 600;">👑 As an admin, you can set the live stream URL in Admin Settings.</p>' : 
+                '<p style="color: #6b7280;">Please contact the church admin to set up the live stream.</p>'}
+            </div>
+          `;
+          noteText = '';
+        }
+      } else if (platform === 'facebook') {
+        platformName = '📘 Facebook Live';
+        if (facebookUrl) {
+          embedCode = `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+              <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(facebookUrl)}&show_text=false&autoplay=1" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                      frameborder="0" 
+                      allowfullscreen 
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+              </iframe>
+            </div>
+          `;
+          noteText = '🔴 Live stream from Facebook. Make sure the video is set to Public for viewing.';
+        } else {
+          embedCode = `
+            <div style="background: #f3f4f6; padding: 40px; border-radius: 12px; text-align: center;">
+              <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">📘 Facebook Live stream link has not been configured yet.</p>
+              ${currentUser && ADMIN_EMAILS.includes(currentUser.email) ? 
+                '<p style="color: #3b82f6; font-weight: 600;">👑 As an admin, you can set the live stream URL in Admin Settings.</p>' : 
+                '<p style="color: #6b7280;">Please contact the church admin to set up the live stream.</p>'}
+            </div>
+          `;
+          noteText = '';
+        }
+      } else if (platform === 'tiktok') {
+        platformName = '🎵 TikTok Live';
+        if (tiktokUrl) {
+          embedCode = `
+            <div style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; max-width: 605px; margin: 0 auto;">
+              <iframe src="https://www.tiktok.com/embed/${extractTikTokId(tiktokUrl)}" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                      frameborder="0" 
+                      allow="encrypted-media" 
+                      allowfullscreen>
+              </iframe>
+            </div>
+          `;
+          noteText = '🔴 TikTok Live stream. Note: TikTok lives are best viewed on mobile devices or the TikTok app.';
+        } else {
+          embedCode = `
+            <div style="background: #f3f4f6; padding: 40px; border-radius: 12px; text-align: center;">
+              <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">🎵 TikTok Live stream link has not been configured yet.</p>
+              ${currentUser && ADMIN_EMAILS.includes(currentUser.email) ? 
+                '<p style="color: #3b82f6; font-weight: 600;">👑 As an admin, you can set the live stream URL in Admin Settings.</p>' : 
+                '<p style="color: #6b7280;">Please contact the church admin to set up the live stream.</p>'}
+              <p style="color: #6b7280; margin-top: 15px; font-size: 0.95em;">💡 Tip: TikTok lives work best when viewed directly on TikTok app or website.</p>
+            </div>
+          `;
+          noteText = '';
+        }
+      }
+
+      title.textContent = platformName;
+      embedDiv.innerHTML = embedCode;
+      note.textContent = noteText;
+      container.style.display = 'block';
+
+      // Scroll to live stream
+      container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function closeLiveStream() {
+      const container = document.getElementById('liveStreamContainer');
+      const embedDiv = document.getElementById('liveStreamEmbed');
+      
+      // Clear the embed to stop video playback
+      embedDiv.innerHTML = '';
+      container.style.display = 'none';
+    }
+
+    function extractTikTokId(url) {
+      // Extract video ID from TikTok URL
+      const match = url.match(/video\/(\d+)/);
+      return match ? match[1] : '';
+    }
+
+    // Handle live stream URLs update
+    async function handleLiveStreamUrlsUpdate(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('❌ Please login first to update.', 'error');
+        return;
+      }
+
+      if (!ADMIN_EMAILS.includes(currentUser.email)) {
+        showToast('❌ Only admins can update live stream URLs.', 'error');
+        return;
+      }
+
+      const youtubeUrl = document.getElementById('youtubeLiveUrl').value;
+      const facebookUrl = document.getElementById('facebookLiveUrl').value;
+      const tiktokUrl = document.getElementById('tiktokLiveUrl').value;
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '🔄 Saving...';
+
+      try {
+        // Save to localStorage
+        localStorage.setItem('vimYoutubeLiveUrl', youtubeUrl);
+        localStorage.setItem('vimFacebookLiveUrl', facebookUrl);
+        localStorage.setItem('vimTiktokLiveUrl', tiktokUrl);
+
+        // Try to save to Firestore
+        try {
+          await db.collection('settings').doc('liveStreamUrls').set({
+            youtube: youtubeUrl,
+            facebook: facebookUrl,
+            tiktok: tiktokUrl,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy: currentUser.email
+          });
+        } catch (firestoreError) {
+          console.log('Firestore save skipped:', firestoreError);
+        }
+
+        showToast('✅ Live stream URLs updated successfully! Members can now watch your live streams.', 'success');
+        document.getElementById('liveStreamUrlsForm').reset();
+      } catch (error) {
+        console.error('Live stream URLs update error:', error);
+        showToast(`❌ Update failed: ${error.message}`, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '💾 Save Live Stream URLs';
+      }
+    }
+
+    // Load saved live stream URLs when admin settings page opens
+    function loadSavedLiveStreamUrls() {
+      const youtubeUrl = localStorage.getItem('vimYoutubeLiveUrl') || '';
+      const facebookUrl = localStorage.getItem('vimFacebookLiveUrl') || '';
+      const tiktokUrl = localStorage.getItem('vimTiktokLiveUrl') || '';
+
+      const youtubeInput = document.getElementById('youtubeLiveUrl');
+      const facebookInput = document.getElementById('facebookLiveUrl');
+      const tiktokInput = document.getElementById('tiktokLiveUrl');
+
+      if (youtubeInput) youtubeInput.value = youtubeUrl;
+      if (facebookInput) facebookInput.value = facebookUrl;
+      if (tiktokInput) tiktokInput.value = tiktokUrl;
+    }
+
+    // Set live streaming status (admin only)
+    async function setLiveStatus(isLive) {
+      if (!currentUser) {
+        showToast('❌ Please login as admin first.', 'error');
+        return;
+      }
+
+      if (!ADMIN_EMAILS.includes(currentUser.email)) {
+        showToast('❌ Only admins can control live status.', 'error');
+        return;
+      }
+
+      try {
+        // Save to localStorage
+        localStorage.setItem('vimIsLive', isLive ? 'true' : 'false');
+
+        // Try to save to Firestore
+        try {
+          await db.collection('settings').doc('liveStatus').set({
+            isLive: isLive,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedBy: currentUser.email
+          });
+        } catch (firestoreError) {
+          console.log('Firestore save skipped:', firestoreError);
+        }
+
+        // Update UI immediately
+        updateLiveStatusDisplay();
+
+        const statusMessage = isLive 
+          ? '🔴 LIVE! The banner is now visible to all visitors on the home page and media page.' 
+          : '⚫ Stream ended. The live banner has been hidden from all visitors.';
+        
+        showToast(`✅ ${statusMessage}`, 'success');
+      } catch (error) {
+        console.error('Live status update error:', error);
+        showToast('❌ Failed to update live status. Please try again.', 'error');
+      }
+    }
+
+    // Update live status display across the site
+    function updateLiveStatusDisplay() {
+      const isLive = localStorage.getItem('vimIsLive') === 'true';
+      
+      // Update home page live alert
+      const homeLiveAlert = document.getElementById('homeLiveAlert');
+      if (homeLiveAlert) {
+        homeLiveAlert.style.display = isLive ? 'block' : 'none';
+      }
+
+      // Update media page live alert
+      const mediaLiveAlert = document.getElementById('mediaLiveAlert');
+      if (mediaLiveAlert) {
+        mediaLiveAlert.style.display = isLive ? 'block' : 'none';
+      }
+
+      // Update admin settings status text
+      const liveStatusText = document.getElementById('liveStatusText');
+      if (liveStatusText) {
+        if (isLive) {
+          liveStatusText.innerHTML = '🔴 LIVE NOW';
+          liveStatusText.style.color = '#dc2626';
+        } else {
+          liveStatusText.innerHTML = '⚫ OFFLINE';
+          liveStatusText.style.color = '#6b7280';
+        }
+      }
+    }
+
+    // Load live stream URLs when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      loadSavedLiveStreamUrls();
+      updateLiveStatusDisplay();
+      
+      // Check live status every 10 seconds for real-time updates
+      setInterval(updateLiveStatusDisplay, 10000);
+    });
+
+    // Home page live streaming functions
+    function showLiveStreamOnHome(platform) {
+      const container = document.getElementById('homeLiveStreamContainer');
+      const embedDiv = document.getElementById('homeLiveStreamEmbed');
+      const title = document.getElementById('homeLiveStreamTitle');
+      const note = document.getElementById('homeLiveStreamNote');
+
+      // Get saved live stream URLs from localStorage
+      const youtubeUrl = localStorage.getItem('vimYoutubeLiveUrl') || '';
+      const facebookUrl = localStorage.getItem('vimFacebookLiveUrl') || '';
+      const tiktokUrl = localStorage.getItem('vimTiktokLiveUrl') || '';
+
+      let embedCode = '';
+      let platformName = '';
+      let noteText = '';
+
+      if (platform === 'youtube') {
+        platformName = '📺 YouTube Live';
+        if (youtubeUrl) {
+          const videoId = extractYouTubeId(youtubeUrl);
+          embedCode = `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+              <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowfullscreen>
+              </iframe>
+            </div>
+          `;
+          noteText = '🔴 Live stream from YouTube. If the stream has ended, you\'ll see the recorded video.';
+        } else {
+          embedCode = `
+            <div style="background: #f3f4f6; padding: 40px; border-radius: 12px; text-align: center;">
+              <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">📺 YouTube Live stream link has not been configured yet.</p>
+              <p style="color: #6b7280;">Please contact the church admin to set up the live stream.</p>
+            </div>
+          `;
+          noteText = '';
+        }
+      } else if (platform === 'facebook') {
+        platformName = '📘 Facebook Live';
+        if (facebookUrl) {
+          embedCode = `
+            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+              <iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(facebookUrl)}&show_text=false&autoplay=1" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                      frameborder="0" 
+                      allowfullscreen 
+                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+              </iframe>
+            </div>
+          `;
+          noteText = '🔴 Live stream from Facebook. Make sure the video is set to Public for viewing.';
+        } else {
+          embedCode = `
+            <div style="background: #f3f4f6; padding: 40px; border-radius: 12px; text-align: center;">
+              <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">📘 Facebook Live stream link has not been configured yet.</p>
+              <p style="color: #6b7280;">Please contact the church admin to set up the live stream.</p>
+            </div>
+          `;
+          noteText = '';
+        }
+      } else if (platform === 'tiktok') {
+        platformName = '🎵 TikTok Live';
+        if (tiktokUrl) {
+          embedCode = `
+            <div style="position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden; max-width: 605px; margin: 0 auto;">
+              <iframe src="https://www.tiktok.com/embed/${extractTikTokId(tiktokUrl)}" 
+                      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                      frameborder="0" 
+                      allow="encrypted-media" 
+                      allowfullscreen>
+              </iframe>
+            </div>
+          `;
+          noteText = '🔴 TikTok Live stream. Note: TikTok lives are best viewed on mobile devices or the TikTok app.';
+        } else {
+          embedCode = `
+            <div style="background: #f3f4f6; padding: 40px; border-radius: 12px; text-align: center;">
+              <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 20px;">🎵 TikTok Live stream link has not been configured yet.</p>
+              <p style="color: #6b7280;">Please contact the church admin to set up the live stream.</p>
+              <p style="color: #6b7280; margin-top: 15px; font-size: 0.95em;">💡 Tip: TikTok lives work best when viewed directly on TikTok app or website.</p>
+            </div>
+          `;
+          noteText = '';
+        }
+      }
+
+      title.textContent = platformName;
+      embedDiv.innerHTML = embedCode;
+      note.textContent = noteText;
+      container.style.display = 'block';
+
+      // Scroll to live stream
+      container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function closeHomeLiveStream() {
+      const container = document.getElementById('homeLiveStreamContainer');
+      const embedDiv = document.getElementById('homeLiveStreamEmbed');
+      
+      // Clear the embed to stop video playback
+      embedDiv.innerHTML = '';
+      container.style.display = 'none';
+    }
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5c337771423f1a',t:'MTc2NDM1NzQwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a5ef60946d63f1a',t:'MTc2NDM4NjM0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
