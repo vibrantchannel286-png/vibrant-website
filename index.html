@@ -1080,6 +1080,18 @@
       background: #1e3c72;
       transition: width 0.3s ease;
     }
+
+    .upload-status {
+      text-align: center;
+      margin: 10px 0;
+      color: #1e3c72;
+      font-weight: bold;
+      display: none;
+    }
+
+    .upload-status.show {
+      display: block;
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -1162,7 +1174,7 @@
      <h2 class="section-title">About Us</h2>
      <div class="content-box">
       <h3>Our History</h3>
-      <p>Vibrant Impact Ministries (VIM) was established in 2020 with a divine mandate to raise vibrant believers who would make lasting kingdom impact. Located in the heart of Akure, Ondo State, Nigeria, we are a prophetic and teaching church committed to equipping believers for effective kingdom service.</p>
+      <p id="aboutHistoryText">Vibrant Impact Ministries (VIM) was established in 2020 with a divine mandate to raise vibrant believers who would make lasting kingdom impact. Located in the heart of Akure, Ondo State, Nigeria, we are a prophetic and teaching church committed to equipping believers for effective kingdom service.</p>
      </div>
      <div class="content-box">
       <h3>Our Departments</h3>
@@ -1173,31 +1185,33 @@
      </div>
      <div class="content-box">
       <h3>Our Vision</h3>
-      <p>To raise a generation of vibrant believers who are spiritually alive, prophetically empowered, and making tangible kingdom impact in their communities and beyond.</p>
+      <p id="aboutVisionText">To raise a generation of vibrant believers who are spiritually alive, prophetically empowered, and making tangible kingdom impact in their communities and beyond.</p>
      </div>
      <div class="content-box">
       <h3>Our Mission</h3>
-      <p>We are committed to:</p>
-      <ul>
-       <li>Teaching the uncompromised Word of God</li>
-       <li>Activating believers in the prophetic</li>
-       <li>Providing deliverance and counseling ministry</li>
-       <li>Equipping the saints for kingdom service</li>
-       <li>Raising prayer warriors and intercessors</li>
-      </ul>
+      <div id="aboutMissionContent">
+       <p>We are committed to:</p>
+       <ul>
+        <li>Teaching the uncompromised Word of God</li>
+        <li>Activating believers in the prophetic</li>
+        <li>Providing deliverance and counseling ministry</li>
+        <li>Equipping the saints for kingdom service</li>
+        <li>Raising prayer warriors and intercessors</li>
+       </ul>
+      </div>
      </div>
      <div class="content-box">
       <h3>Our Beliefs</h3>
-      <p>We believe in the infallibility of Scripture, the deity of Jesus Christ, salvation through faith in Christ alone, the baptism of the Holy Spirit, divine healing, and the imminent return of our Lord Jesus Christ.</p>
+      <p id="aboutBeliefsText">We believe in the infallibility of Scripture, the deity of Jesus Christ, salvation through faith in Christ alone, the baptism of the Holy Spirit, divine healing, and the imminent return of our Lord Jesus Christ.</p>
      </div>
      <div class="content-box">
       <h3 id="pastorNameDisplay">Prophet Valentine Ifedayo</h3>
-      <div style="display: flex; justify-content: center; margin: 20px 0;"><img src="https://lh3.googleusercontent.com/d/19iPQ2uK4vDTMBCeXxDt03GvMnn2h-C_a" alt="Prophet Valentine Ifedayo" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 4px solid #FFD700;" onerror="this.style.display='none';">
+      <div style="display: flex; justify-content: center; margin: 20px 0;"><img id="pastorPhoto" src="https://lh3.googleusercontent.com/d/19iPQ2uK4vDTMBCeXxDt03GvMnn2h-C_a" alt="Prophet Valentine Ifedayo" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 4px solid #FFD700;" onerror="this.style.display='none';">
       </div>
       <p id="pastorBioText">Prophet Valentine Ifedayo is the Lead Pastor and Founder of Vibrant Impact Ministries. Called by God as a prophet and teacher, he carries a burden for raising believers who are spiritually alive and impactful. His teaching ministry emphasizes practical kingdom living, prophetic activation, and spiritual warfare.</p>
       <p id="pastorBioText2">Prophet Valentine is passionate about seeing believers walk in their God-given purpose and destiny. His ministry is characterized by the demonstration of the Spirit's power, accurate prophetic ministry, and life-transforming teaching of God's Word.</p>
      </div>
-     <div class="content-box">
+     <div class="content-box" id="pastorWifeSection" style="display: none;">
       <h3 id="pastorWifeNameDisplay">Pastor's Wife</h3>
       <div style="display: flex; justify-content: center; margin: 20px 0;"><img id="pastorWifeImage" src="" alt="Pastor's Wife" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 4px solid #FFD700; display: none;" onerror="this.style.display='none';">
       </div>
@@ -1291,7 +1305,8 @@
        </div><input type="url" id="mediaUrl" placeholder="Image/Video URL (optional if uploading files)">
        <div class="upload-progress" id="uploadProgress">
         <div class="upload-progress-bar" id="uploadProgressBar"></div>
-       </div><button type="submit">Upload Media</button>
+       </div>
+       <div class="upload-status" id="uploadStatus"></div><button type="submit">Upload Media</button>
       </form>
      </div>
      <div class="loading-spinner" id="mediaLoading"></div><!-- Media Grid -->
@@ -1408,7 +1423,7 @@
       <h3>🔧 Admin Controls</h3>
       <div>
        <h4>Live Streaming Status</h4>
-       <p>Current Status: <span id="liveStatusText">��� OFFLINE</span></p>
+       <p>Current Status: <span id="liveStatusText">⚫ OFFLINE</span></p>
        <div class="live-controls"><button class="go-live-btn" onclick="setLiveStatus(true)">🔴 GO LIVE</button> <button class="end-live-btn" onclick="setLiveStatus(false)">⚫ END STREAM</button>
        </div>
       </div>
@@ -1433,7 +1448,7 @@
       <hr style="margin: 30px 0; border: none; border-top: 2px solid #FFD700;">
       <div>
        <h4>📝 About Us Content</h4>
-       <div class="stream-url-inputs"><label>Church History:</label> <textarea id="aboutHistory" rows="4" placeholder="Enter church history..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Vision Statement:</label> <textarea id="aboutVision" rows="3" placeholder="Enter vision statement..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Mission Statement:</label> <textarea id="aboutMission" rows="4" placeholder="Enter mission statement..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Core Beliefs:</label> <textarea id="aboutBeliefs" rows="4" placeholder="Enter core beliefs..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Pastor Bio:</label> <textarea id="pastorBio" rows="4" placeholder="Enter pastor biography..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Pastor's Wife Name:</label> <input type="text" id="pastorWifeName" placeholder="Enter pastor's wife name..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"> <label>Pastor's Wife Photo URL:</label> <input type="url" id="pastorWifePhotoUrl" placeholder="Enter pastor's wife photo URL..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"> <label>Pastor's Wife Bio:</label> <textarea id="pastorWifeBio" rows="4" placeholder="Enter pastor's wife biography..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <button onclick="updateAboutContent()" style="width: 100%; background: #FFD700; color: #1e3c72; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px;">💾 Save About Content</button>
+       <div class="stream-url-inputs"><label>Church History:</label> <textarea id="aboutHistory" rows="4" placeholder="Enter church history..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Vision Statement:</label> <textarea id="aboutVision" rows="3" placeholder="Enter vision statement..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Mission Statement:</label> <textarea id="aboutMission" rows="4" placeholder="Enter mission statement..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Core Beliefs:</label> <textarea id="aboutBeliefs" rows="4" placeholder="Enter core beliefs..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Pastor Name:</label> <input type="text" id="pastorName" placeholder="Enter pastor name..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"> <label>Pastor Photo URL:</label> <input type="url" id="pastorPhotoUrl" placeholder="Enter pastor photo URL..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"> <label>Pastor Bio:</label> <textarea id="pastorBio" rows="4" placeholder="Enter pastor biography..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <label>Pastor's Wife Name:</label> <input type="text" id="pastorWifeName" placeholder="Enter pastor's wife name..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"> <label>Pastor's Wife Photo URL:</label> <input type="url" id="pastorWifePhotoUrl" placeholder="Enter pastor's wife photo URL..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;"> <label>Pastor's Wife Bio:</label> <textarea id="pastorWifeBio" rows="4" placeholder="Enter pastor's wife biography..." style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"></textarea> <button onclick="updateAboutContent()" style="width: 100%; background: #FFD700; color: #1e3c72; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px;">💾 Save About Content</button>
        </div>
       </div>
       <hr style="margin: 30px 0; border: none; border-top: 2px solid #FFD700;">
@@ -1533,7 +1548,9 @@
       document.getElementById(pageId).classList.add('active');
       
       // Add active class to clicked button
-      event.target.classList.add('active');
+      if (event && event.target) {
+        event.target.classList.add('active');
+      }
       
       // Update user section for media page
       if (pageId === 'media') {
@@ -1923,6 +1940,7 @@
       const loadingSpinner = document.getElementById('mediaLoading');
       const progressBar = document.getElementById('uploadProgress');
       const progressBarFill = document.getElementById('uploadProgressBar');
+      const uploadStatus = document.getElementById('uploadStatus');
       
       loadingSpinner.classList.add('show');
       
@@ -1930,11 +1948,14 @@
         // Check if files are selected for upload
         if (files.length > 0) {
           progressBar.classList.add('show');
+          uploadStatus.classList.add('show');
           
           // Upload multiple files
           for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const fileType = file.type.startsWith('image/') ? 'image' : 'video';
+            
+            uploadStatus.textContent = `Uploading file ${i + 1} of ${files.length}...`;
             
             // Create a storage reference
             const storageRef = storage.ref();
@@ -1948,6 +1969,7 @@
               (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 progressBarFill.style.width = progress + '%';
+                uploadStatus.textContent = `Uploading file ${i + 1} of ${files.length} (${Math.round(progress)}%)...`;
               },
               (error) => {
                 showToast('❌ Upload failed: ' + error.message, 'error');
@@ -1967,6 +1989,8 @@
                   uploadedBy: currentUser.email,
                   uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                
+                showToast(`✅ File ${i + 1} of ${files.length} uploaded!`, 'success');
               }
             );
             
@@ -1974,7 +1998,10 @@
             await uploadTask;
           }
           
-          showToast(`✅ ${files.length} file(s) uploaded successfully!`, 'success');
+          uploadStatus.textContent = `🎉 All ${files.length} file(s) uploaded successfully!`;
+          setTimeout(() => {
+            uploadStatus.classList.remove('show');
+          }, 3000);
         } else if (urlInput) {
           // Upload via URL (original functionality)
           await db.collection('media').add({
@@ -1990,7 +2017,8 @@
           
           showToast('✅ Media uploaded successfully!', 'success');
         } else {
-          showToast('�����️ Please select files or enter a URL.', 'error');
+          showToast('⚠️ Please select files or enter a URL.', 'error');
+          loadingSpinner.classList.remove('show');
           return;
         }
         
@@ -2000,6 +2028,10 @@
         loadMediaItems();
       } catch (error) {
         showToast('❌ Upload failed: ' + error.message, 'error');
+        uploadStatus.textContent = 'Upload failed. Please try again.';
+        setTimeout(() => {
+          uploadStatus.classList.remove('show');
+        }, 3000);
       } finally {
         loadingSpinner.classList.remove('show');
       }
@@ -2237,6 +2269,8 @@
       const vision = document.getElementById('aboutVision').value.trim();
       const mission = document.getElementById('aboutMission').value.trim();
       const beliefs = document.getElementById('aboutBeliefs').value.trim();
+      const pastorName = document.getElementById('pastorName').value.trim();
+      const pastorPhotoUrl = document.getElementById('pastorPhotoUrl').value.trim();
       const pastorBio = document.getElementById('pastorBio').value.trim();
       const pastorWifeName = document.getElementById('pastorWifeName').value.trim();
       const pastorWifePhotoUrl = document.getElementById('pastorWifePhotoUrl').value.trim();
@@ -2247,6 +2281,8 @@
       if (vision) localStorage.setItem('vimAboutVision', vision);
       if (mission) localStorage.setItem('vimAboutMission', mission);
       if (beliefs) localStorage.setItem('vimAboutBeliefs', beliefs);
+      if (pastorName) localStorage.setItem('vimPastorName', pastorName);
+      if (pastorPhotoUrl) localStorage.setItem('vimPastorPhotoUrl', pastorPhotoUrl);
       if (pastorBio) localStorage.setItem('vimPastorBio', pastorBio);
       if (pastorWifeName) localStorage.setItem('vimPastorWifeName', pastorWifeName);
       if (pastorWifePhotoUrl) localStorage.setItem('vimPastorWifePhotoUrl', pastorWifePhotoUrl);
@@ -2264,86 +2300,69 @@
       const defaultVision = "To raise a generation of vibrant believers who are spiritually alive, prophetically empowered, and making tangible kingdom impact in their communities and beyond.";
       const defaultMission = "We are committed to:\n• Teaching the uncompromised Word of God\n• Activating believers in the prophetic\n• Providing deliverance and counseling ministry\n• Equipping the saints for kingdom service\n• Raising prayer warriors and intercessors";
       const defaultBeliefs = "We believe in the infallibility of Scripture, the deity of Jesus Christ, salvation through faith in Christ alone, the baptism of the Holy Spirit, divine healing, and the imminent return of our Lord Jesus Christ.";
+      const defaultPastorName = "Prophet Valentine Ifedayo";
+      const defaultPastorPhotoUrl = "https://lh3.googleusercontent.com/d/19iPQ2uK4vDTMBCeXxDt03GvMnn2h-C_a";
       const defaultPastorBio = "Prophet Valentine Ifedayo is the Lead Pastor and Founder of Vibrant Impact Ministries. Called by God as a prophet and teacher, he carries a burden for raising believers who are spiritually alive and impactful. His teaching ministry emphasizes practical kingdom living, prophetic activation, and spiritual warfare.\n\nProphet Valentine is passionate about seeing believers walk in their God-given purpose and destiny. His ministry is characterized by the demonstration of the Spirit's power, accurate prophetic ministry, and life-transforming teaching of God's Word.";
 
       const history = localStorage.getItem('vimAboutHistory') || defaultHistory;
       const vision = localStorage.getItem('vimAboutVision') || defaultVision;
       const mission = localStorage.getItem('vimAboutMission') || defaultMission;
       const beliefs = localStorage.getItem('vimAboutBeliefs') || defaultBeliefs;
+      const pastorName = localStorage.getItem('vimPastorName') || defaultPastorName;
+      const pastorPhotoUrl = localStorage.getItem('vimPastorPhotoUrl') || defaultPastorPhotoUrl;
       const pastorBio = localStorage.getItem('vimPastorBio') || defaultPastorBio;
 
       // Update About page content
-      const aboutPage = document.getElementById('about');
-      if (aboutPage) {
-        const historyBox = aboutPage.querySelectorAll('.content-box')[0];
-        if (historyBox) {
-          historyBox.querySelector('p').textContent = history;
-        }
+      const aboutHistoryText = document.getElementById('aboutHistoryText');
+      const aboutVisionText = document.getElementById('aboutVisionText');
+      const aboutBeliefsText = document.getElementById('aboutBeliefsText');
+      const aboutMissionContent = document.getElementById('aboutMissionContent');
+      const pastorNameDisplay = document.getElementById('pastorNameDisplay');
+      const pastorPhoto = document.getElementById('pastorPhoto');
+      const pastorBioText = document.getElementById('pastorBioText');
+      const pastorBioText2 = document.getElementById('pastorBioText2');
 
-        const visionBox = aboutPage.querySelectorAll('.content-box')[2];
-        if (visionBox) {
-          visionBox.querySelector('p').textContent = vision;
-        }
+      if (aboutHistoryText) aboutHistoryText.textContent = history;
+      if (aboutVisionText) aboutVisionText.textContent = vision;
+      if (aboutBeliefsText) aboutBeliefsText.textContent = beliefs;
+      
+      if (aboutMissionContent) {
+        const missionList = mission.split('\n').filter(line => line.trim());
+        aboutMissionContent.innerHTML = `
+          <p>${missionList[0]}</p>
+          <ul>
+            ${missionList.slice(1).map(item => `<li>${item.replace('•', '').trim()}</li>`).join('')}
+          </ul>
+        `;
+      }
 
-        const missionBox = aboutPage.querySelectorAll('.content-box')[3];
-        if (missionBox) {
-          const missionList = mission.split('\n').filter(line => line.trim());
-          missionBox.innerHTML = `
-            <h3>Our Mission</h3>
-            <p>${missionList[0]}</p>
-            <ul>
-              ${missionList.slice(1).map(item => `<li>${item.replace('���', '').trim()}</li>`).join('')}
-            </ul>
-          `;
-        }
+      if (pastorNameDisplay) pastorNameDisplay.textContent = pastorName;
+      if (pastorPhoto) pastorPhoto.src = pastorPhotoUrl;
+      
+      const paragraphs = pastorBio.split('\n\n');
+      if (pastorBioText) pastorBioText.textContent = paragraphs[0] || '';
+      if (pastorBioText2) pastorBioText2.textContent = paragraphs[1] || '';
 
-        const beliefsBox = aboutPage.querySelectorAll('.content-box')[4];
-        if (beliefsBox) {
-          beliefsBox.querySelector('p').textContent = beliefs;
-        }
+      // Update pastor's wife section
+      const pastorWifeName = localStorage.getItem('vimPastorWifeName') || '';
+      const pastorWifePhotoUrl = localStorage.getItem('vimPastorWifePhotoUrl') || '';
+      const pastorWifeBioText = localStorage.getItem('vimPastorWifeBio') || '';
 
-        const pastorBox = aboutPage.querySelectorAll('.content-box')[5];
-        if (pastorBox) {
-          const paragraphs = pastorBio.split('\n\n');
-          const bioHTML = paragraphs.map(p => `<p>${p}</p>`).join('');
-          pastorBox.innerHTML = `
-            <h3 id="pastorNameDisplay">Prophet Valentine Ifedayo</h3>
-            <div style="display: flex; justify-content: center; margin: 20px 0;">
-              <img src="https://lh3.googleusercontent.com/d/19iPQ2uK4vDTMBCeXxDt03GvMnn2h-C_a" alt="Prophet Valentine Ifedayo" style="width: 180px; height: 180px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 4px solid #FFD700;" onerror="this.style.display='none';">
-            </div>
-            ${bioHTML}
-          `;
-        }
+      const pastorWifeSection = document.getElementById('pastorWifeSection');
+      const pastorWifeNameDisplay = document.getElementById('pastorWifeNameDisplay');
+      const pastorWifeImage = document.getElementById('pastorWifeImage');
+      const pastorWifeBioDisplay = document.getElementById('pastorWifeBioText');
 
-        // Update pastor's wife section
-        const pastorWifeName = localStorage.getItem('vimPastorWifeName') || '';
-        const pastorWifePhotoUrl = localStorage.getItem('vimPastorWifePhotoUrl') || '';
-        const pastorWifeBioText = localStorage.getItem('vimPastorWifeBio') || '';
-
-        const pastorWifeNameDisplay = document.getElementById('pastorWifeNameDisplay');
-        const pastorWifeImage = document.getElementById('pastorWifeImage');
-        const pastorWifeBioDisplay = document.getElementById('pastorWifeBioText');
-
-        if (pastorWifeNameDisplay && pastorWifeName) {
-          pastorWifeNameDisplay.textContent = pastorWifeName;
-        }
-
+      if (pastorWifeName && pastorWifeBioText) {
+        if (pastorWifeSection) pastorWifeSection.style.display = 'block';
+        if (pastorWifeNameDisplay) pastorWifeNameDisplay.textContent = pastorWifeName;
         if (pastorWifeImage && pastorWifePhotoUrl) {
           pastorWifeImage.src = pastorWifePhotoUrl;
           pastorWifeImage.style.display = 'block';
         }
-
-        if (pastorWifeBioDisplay && pastorWifeBioText) {
-          pastorWifeBioDisplay.textContent = pastorWifeBioText;
-        }
-
-        // Hide pastor's wife section if no content
-        const pastorWifeBox = aboutPage.querySelectorAll('.content-box')[6];
-        if (pastorWifeBox && (!pastorWifeName || !pastorWifeBioText)) {
-          pastorWifeBox.style.display = 'none';
-        } else if (pastorWifeBox) {
-          pastorWifeBox.style.display = 'block';
-        }
+        if (pastorWifeBioDisplay) pastorWifeBioDisplay.textContent = pastorWifeBioText;
+      } else {
+        if (pastorWifeSection) pastorWifeSection.style.display = 'none';
       }
 
       // Load into admin form fields if admin
@@ -2352,6 +2371,8 @@
         const visionField = document.getElementById('aboutVision');
         const missionField = document.getElementById('aboutMission');
         const beliefsField = document.getElementById('aboutBeliefs');
+        const pastorNameField = document.getElementById('pastorName');
+        const pastorPhotoField = document.getElementById('pastorPhotoUrl');
         const pastorBioField = document.getElementById('pastorBio');
         const pastorWifeNameField = document.getElementById('pastorWifeName');
         const pastorWifePhotoField = document.getElementById('pastorWifePhotoUrl');
@@ -2361,15 +2382,12 @@
         if (visionField) visionField.value = vision;
         if (missionField) missionField.value = mission;
         if (beliefsField) beliefsField.value = beliefs;
+        if (pastorNameField) pastorNameField.value = pastorName;
+        if (pastorPhotoField) pastorPhotoField.value = pastorPhotoUrl;
         if (pastorBioField) pastorBioField.value = pastorBio;
-        
-        const pastorWifeName = localStorage.getItem('vimPastorWifeName') || '';
-        const pastorWifePhotoUrl = localStorage.getItem('vimPastorWifePhotoUrl') || '';
-        const pastorWifeBio = localStorage.getItem('vimPastorWifeBio') || '';
-        
         if (pastorWifeNameField) pastorWifeNameField.value = pastorWifeName;
         if (pastorWifePhotoField) pastorWifePhotoField.value = pastorWifePhotoUrl;
-        if (pastorWifeBioField) pastorWifeBioField.value = pastorWifeBio;
+        if (pastorWifeBioField) pastorWifeBioField.value = pastorWifeBioText;
       }
     }
 
@@ -2883,6 +2901,6 @@
       setInterval(updateLiveStatusDisplay, 10000);
     });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a71d836f66a534c',t:'MTc2NDU4NDM0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a71fcf3e2433f1a',t:'MTc2NDU4NTg1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
 
