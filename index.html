@@ -1134,7 +1134,7 @@
       </div>
      </div>
      <div class="countdown-container" id="fireNightCountdown">
-      <h3>🔥 Next Fire Night Countdown</h3>
+      <h3>������ Next Fire Night Countdown</h3>
       <div class="countdown-timer">
        <div class="countdown-item"><span class="countdown-value" id="days">00</span> <span class="countdown-label">Days</span>
        </div>
@@ -1299,7 +1299,7 @@
      <div id="mediaUserSection"></div><!-- Admin Upload Controls -->
      <div class="media-controls" id="adminUploadSection">
       <h3>Upload Media (Admin Only)</h3>
-      <form class="upload-form" id="uploadForm" onsubmit="uploadMedia(event)"><select id="mediaType" required> <option value="">Select Type *</option> <option value="image">Image</option> <option value="video">Video</option> </select> <input type="text" id="mediaTitle" placeholder="Title *" required> <textarea id="mediaDescription" placeholder="Description" rows="3"></textarea> <select id="mediaCategory" required> <option value="">Select Category *</option> <option value="sermon">Recent Sermons</option> <option value="firenight">Fire Night Highlights</option> <option value="youth">Youth Fellowship</option> <option value="events">Special Events</option> <option value="worship">Worship Moments</option> </select>
+      <form class="upload-form" id="uploadForm" onsubmit="uploadMedia(event)"><select id="mediaType" required> <option value="">Select Type *</option> <option value="image">Image</option> <option value="video">Video</option> </select> <input type="text" id="mediaTitle" placeholder="Title *" required> <textarea id="mediaDescription" placeholder="Description" rows="3"></textarea> <select id="mediaCategory" required> <option value="">Select Category *</option> <option value="sermon">Recent Sermons</option> <option value="firenight">Fire Night Highlights</option> <option value="youth">Youth Fellowship</option> <option value="events">Special Events</option> <option value="worship">Worship Moments</option> </select> <select id="mediaLanguage" required> <option value="">Select Language *</option> <option value="English">English</option> <option value="Mandola">Mandola Dialect</option> <option value="Yoruba">Yoruba</option> <option value="Pidgin">Nigerian Pidgin</option> <option value="Other">Other</option> </select>
        <div style="margin: 15px 0;"><label style="display: block; margin-bottom: 5px; font-weight: bold;">Upload from Computer (Multiple files supported):</label> <input type="file" id="mediaFiles" accept="image/*,video/*" multiple style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;">
         <p style="font-size: 12px; color: #666; margin: 5px 0;">Or enter URL below:</p>
        </div><input type="url" id="mediaUrl" placeholder="Image/Video URL (optional if uploading files)">
@@ -1688,7 +1688,7 @@
       event.preventDefault();
       
       if (!currentUser) {
-        showToast('❌ Please login first.', 'error');
+        showToast('������ Please login first.', 'error');
         return;
       }
       
@@ -1933,6 +1933,7 @@
       const title = document.getElementById('mediaTitle').value;
       const description = document.getElementById('mediaDescription').value;
       const category = document.getElementById('mediaCategory').value;
+      const language = document.getElementById('mediaLanguage').value;
       const urlInput = document.getElementById('mediaUrl').value;
       const fileInput = document.getElementById('mediaFiles');
       const files = fileInput.files;
@@ -1950,58 +1951,49 @@
           progressBar.classList.add('show');
           uploadStatus.classList.add('show');
           
-          // Upload multiple files
-          for (let i = 0; i < files.length; i++) {
-            const file = files[i];
+          // Upload all files in parallel for speed
+          const uploadPromises = Array.from(files).map(async (file, i) => {
             const fileType = file.type.startsWith('image/') ? 'image' : 'video';
-            
-            uploadStatus.textContent = `Uploading file ${i + 1} of ${files.length}...`;
             
             // Create a storage reference
             const storageRef = storage.ref();
-            const fileRef = storageRef.child(`media/${Date.now()}_${file.name}`);
+            const fileRef = storageRef.child(`media/${Date.now()}_${i}_${file.name}`);
             
-            // Upload file
-            const uploadTask = fileRef.put(file);
+            // Upload file (no progress monitoring for speed)
+            await fileRef.put(file);
             
-            // Monitor upload progress
-            uploadTask.on('state_changed', 
-              (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                progressBarFill.style.width = progress + '%';
-                uploadStatus.textContent = `Uploading file ${i + 1} of ${files.length} (${Math.round(progress)}%)...`;
-              },
-              (error) => {
-                showToast('❌ Upload failed: ' + error.message, 'error');
-              },
-              async () => {
-                // Get download URL
-                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                
-                // Save to Firestore
-                await db.collection('media').add({
-                  type: fileType,
-                  title: files.length > 1 ? `${title} (${i + 1})` : title,
-                  description: description,
-                  category: category,
-                  imageUrl: fileType === 'image' ? downloadURL : '',
-                  videoUrl: fileType === 'video' ? downloadURL : '',
-                  uploadedBy: currentUser.email,
-                  uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                showToast(`✅ File ${i + 1} of ${files.length} uploaded!`, 'success');
-              }
-            );
+            // Get download URL
+            const downloadURL = await fileRef.getDownloadURL();
             
-            // Wait for upload to complete
-            await uploadTask;
-          }
+            // Save to Firestore
+            await db.collection('media').add({
+              type: fileType,
+              title: files.length > 1 ? `${title} (${i + 1})` : title,
+              description: description,
+              category: category,
+              language: language,
+              imageUrl: fileType === 'image' ? downloadURL : '',
+              videoUrl: fileType === 'video' ? downloadURL : '',
+              uploadedBy: currentUser.email,
+              uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            return i + 1;
+          });
           
+          uploadStatus.textContent = `Uploading ${files.length} file(s)...`;
+          progressBarFill.style.width = '50%';
+          
+          // Wait for all uploads to complete
+          await Promise.all(uploadPromises);
+          
+          progressBarFill.style.width = '100%';
           uploadStatus.textContent = `🎉 All ${files.length} file(s) uploaded successfully!`;
+          showToast(`✅ ${files.length} file(s) uploaded!`, 'success');
+          
           setTimeout(() => {
             uploadStatus.classList.remove('show');
-          }, 3000);
+          }, 2000);
         } else if (urlInput) {
           // Upload via URL (original functionality)
           await db.collection('media').add({
@@ -2009,6 +2001,7 @@
             title: title,
             description: description,
             category: category,
+            language: language,
             imageUrl: type === 'image' ? urlInput : '',
             videoUrl: type === 'video' ? urlInput : '',
             uploadedBy: currentUser.email,
@@ -2017,7 +2010,7 @@
           
           showToast('✅ Media uploaded successfully!', 'success');
         } else {
-          showToast('⚠️ Please select files or enter a URL.', 'error');
+          showToast('������ Please select files or enter a URL.', 'error');
           loadingSpinner.classList.remove('show');
           return;
         }
@@ -2074,15 +2067,58 @@
         <div class="media-item">
           ${item.type === 'image' ? 
             `<img src="${item.imageUrl}" alt="${item.title}" onerror="this.src=''; this.alt='Image failed to load'; this.style.display='none';">` :
-            `<video controls>
-              <source src="${item.videoUrl}" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>`
+            (item.videoUrl.includes('youtube.com') || item.videoUrl.includes('youtu.be') ?
+              `<div style="width: 100%; height: 200px; position: relative;">
+                <iframe 
+                  width="100%" 
+                  height="200" 
+                  src="${item.videoUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen
+                  style="border-radius: 0;">
+                </iframe>
+              </div>` :
+              (item.videoUrl.includes('facebook.com') || item.videoUrl.includes('fb.watch') || item.videoUrl.includes('fb.com') ?
+                `<div style="width: 100%; height: 200px; position: relative;">
+                  <iframe 
+                    src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(item.videoUrl)}&width=500&show_text=false&appId" 
+                    width="100%" 
+                    height="200" 
+                    style="border:none;overflow:hidden" 
+                    scrolling="no" 
+                    frameborder="0" 
+                    allowfullscreen="true" 
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                  </iframe>
+                </div>` :
+                `<div style="width: 100%; height: 200px; background: #000; display: flex; align-items: center; justify-content: center; position: relative;">
+                  <video 
+                    id="video_${item.id}"
+                    controls 
+                    preload="metadata" 
+                    playsinline 
+                    webkit-playsinline 
+                    style="width: 100%; height: 100%; object-fit: contain;"
+                    onloadeddata="this.style.display='block'; this.nextElementSibling.style.display='none';"
+                    onerror="handleVideoError(this, '${item.videoUrl}', '${item.title}')">
+                    <source src="${item.videoUrl}" type="video/mp4">
+                    <source src="${item.videoUrl.replace('.mp4', '.webm')}" type="video/webm">
+                    <source src="${item.videoUrl.replace('.mp4', '.mov')}" type="video/quicktime">
+                  </video>
+                  <div style="position: absolute; color: white; text-align: center; padding: 20px; display: none;" id="error_${item.id}">
+                    <p style="margin: 10px 0;">📹 Video Preview Unavailable</p>
+                    <a href="${item.videoUrl}" download target="_blank" rel="noopener noreferrer" style="color: #FFD700; text-decoration: underline; font-weight: bold;">⬇️ Download Video</a>
+                  </div>
+                </div>`
+              )
+            )
           }
           <div class="media-info">
             <h4>${item.title}</h4>
             <p>${item.description || 'No description'}</p>
             <p><strong>Category:</strong> ${item.category}</p>
+            <p><strong>Language:</strong> ${item.language || 'Not specified'}</p>
             <div class="media-actions">
               ${currentUser ? `<button class="download-btn" onclick="downloadMedia('${item.id}')">⬇️ Download</button>` : ''}
               ${isAdmin ? `<button class="delete-btn show" onclick="deleteMedia('${item.id}')">🗑️ Delete</button>` : ''}
@@ -2186,7 +2222,7 @@
       const logoUrl = document.getElementById('logoUrl').value.trim();
       
       if (!logoUrl) {
-        showToast('⚠️ Please enter a logo URL.', 'error');
+        showToast('⚠��� Please enter a logo URL.', 'error');
         return;
       }
 
@@ -2206,7 +2242,7 @@
       // Update header logo
       const headerLogo = document.querySelector('.logo-section .logo');
       if (headerLogo) {
-        headerLogo.innerHTML = `<img src="${logoUrl}" alt="VIM Logo" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.parentElement.innerHTML='🔥'; this.parentElement.style.fontSize='32px'; this.parentElement.style.display='flex'; this.parentElement.style.alignItems='center'; this.parentElement.style.justifyContent='center';">`;
+        headerLogo.innerHTML = `<img src="${logoUrl}" alt="VIM Logo" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.parentElement.innerHTML='����'; this.parentElement.style.fontSize='32px'; this.parentElement.style.display='flex'; this.parentElement.style.alignItems='center'; this.parentElement.style.justifyContent='center';">`;
       }
 
       // Update admin preview logo
@@ -2654,7 +2690,7 @@
     // Delete department (admin only)
     async function deleteDepartment(deptId) {
       if (!isAdmin) {
-        showToast('❌ Only admins can delete departments.', 'error');
+        showToast('��� Only admins can delete departments.', 'error');
         return;
       }
       
@@ -2790,7 +2826,7 @@
       // Default Sunday and Tuesday services (always shown)
       const defaultEvents = [
         {
-          icon: '🌟',
+          icon: '����',
           title: 'Sunday Glory Service',
           schedule: 'Every Sunday',
           time: '9:00 AM',
@@ -2873,6 +2909,33 @@
       }
     }
 
+    // Handle video loading errors with detailed feedback
+    function handleVideoError(videoElement, url, title) {
+      console.log('Video failed to load:', url);
+      const errorDiv = videoElement.nextElementSibling;
+      if (errorDiv) {
+        // Provide more specific error message
+        let errorMessage = '📹 Video Preview Unavailable';
+        let suggestion = '';
+        
+        if (url.includes('firebasestorage')) {
+          suggestion = '<p style="font-size: 14px; margin: 10px 0;">The video file may have been deleted or moved. Try re-uploading the video.</p>';
+        } else if (url.includes('drive.google.com')) {
+          suggestion = '<p style="font-size: 14px; margin: 10px 0;">Google Drive links require public sharing permissions. Make sure the video is set to "Anyone with the link can view".</p>';
+        } else {
+          suggestion = '<p style="font-size: 14px; margin: 10px 0;">The video URL may be incorrect or the file may no longer exist.</p>';
+        }
+        
+        errorDiv.innerHTML = `
+          <p style="margin: 10px 0;">${errorMessage}</p>
+          ${suggestion}
+          <a href="${url}" download target="_blank" rel="noopener noreferrer" style="color: #FFD700; text-decoration: underline; font-weight: bold;">⬇️ Try Download Link</a>
+        `;
+        errorDiv.style.display = 'block';
+      }
+      videoElement.style.display = 'none';
+    }
+
     // Load live stream URLs and content when page loads
     window.addEventListener('DOMContentLoaded', function() {
       loadSavedLiveStreamUrls();
@@ -2901,6 +2964,6 @@
       setInterval(updateLiveStatusDisplay, 10000);
     });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a71fcf3e2433f1a',t:'MTc2NDU4NTg1NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a728c9e06bd534c',t:'MTc2NDU5MTczOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
 
